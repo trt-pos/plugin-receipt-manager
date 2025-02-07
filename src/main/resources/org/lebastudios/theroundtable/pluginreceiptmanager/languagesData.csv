@@ -1,0 +1,17 @@
+textKey,en_EN,es_ES
+phrase.genericpublic,Generic Public,Público General
+word.overall,Overall,Total
+phrase.unknownproduct,Others,Otros
+word.from,From,Desde
+word.to,To,Hasta
+word.activity,Activity,Actividad
+word.income,Income,Ingresos
+word.over,Over,Sobre
+word.iva,Taxes,IVA
+word.at,at,a las
+word.date,Date:,Fecha:
+word.receipt,Receipt:,Recibo:
+word.productssold,Products,Productos
+phrase.rectbillof,Rectification bill of the bill:,Factura rectificativa de la factura:
+confirmdialog.editreceipt,You are about to generate a new bill. Are you sure??,Vas a generar un nuevo recibo. ¿Desea continuar?
+infodialog.errorsavingmodifiedreceipt,An error has ocurred while saving the receipt in the database,Ha ocurrido un error al guardar el nuevo recibo.

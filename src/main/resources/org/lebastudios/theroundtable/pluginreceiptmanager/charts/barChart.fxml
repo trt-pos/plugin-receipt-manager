@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<BarChart xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea"
+          fx:id="chart" legendVisible="false" maxWidth="Infinity" maxHeight="Infinity">
+    <xAxis>
+        <CategoryAxis label="%word.hours" side="BOTTOM"/>
+    </xAxis>
+    <yAxis>
+        <NumberAxis side="LEFT" tickMarkVisible="false" tickUnit="0.0"/>
+    </yAxis>
+</BarChart>

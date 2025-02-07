@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.lebastudios.theroundtable.ui.MultipleItemsListView?>
+<?import org.lebastudios.theroundtable.ui.SearchBox?>
+<SplitPane dividerPositions="0.40" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox spacing="5">
+        <padding>
+            <Insets bottom="10" left="10" right="10" top="10"/>
+        </padding>
+        <SearchBox fx:id="searchBox"/>
+        <MultipleItemsListView fx:id="receiptList" VBox.vgrow="ALWAYS"/>
+    </VBox>
+    <BorderPane fx:id="rightView" VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity">
+        <padding>
+            <Insets top="10" bottom="10" left="10" right="10"/>
+        </padding>
+        <top>
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <padding>
+                    <Insets bottom="10" top="10" />
+                </padding>
+                <Label alignment="CENTER" text="%word.from" minWidth="50"/>
+                <DatePicker HBox.hgrow="ALWAYS" fx:id="startDate" maxWidth="Infinity"/>
+                <Label alignment="CENTER" text="%word.to" minWidth="30"/>
+                <DatePicker HBox.hgrow="ALWAYS" fx:id="endDate" maxWidth="Infinity"/>
+                <Button onAction="#search" text="%word.search" minWidth="100"/>
+            </HBox>
+        </top>
+        <center>
+            <TabPane fx:id="statsTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
+        </center>
+    </BorderPane>
+</SplitPane>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<PieChart xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea"
+          fx:id="chart" legendVisible="false" maxWidth="Infinity" maxHeight="Infinity">
+</PieChart>
