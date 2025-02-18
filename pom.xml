@@ -44,7 +44,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <outputDirectory>../desktop-app/plugins</outputDirectory>
+                    <outputDirectory>${project.basedir}</outputDirectory>
                     <finalName>${project.artifactId}</finalName>
                 </configuration>
             </plugin>
