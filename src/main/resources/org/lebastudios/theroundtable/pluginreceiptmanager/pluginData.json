@@ -3,7 +3,7 @@
   "pluginId": "plugin-receipt-manager",
   "pluginIcon": "receipt",
   "pluginDescription": "A plugin that allows you to manage receipts and your business income.",
-  "pluginVersion": "1.4.0",
+  "pluginVersion": "1.4.1",
   "pluginVendor": "Leba Studios - Software Solutions",
   "pluginVendorUrl": "https://lebastudios.org",
   "pluginRequiredCoreVersion": "2.5.0",
