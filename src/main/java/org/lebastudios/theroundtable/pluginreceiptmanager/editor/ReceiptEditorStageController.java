@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.DefaultStringConverter;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.lebastudios.theroundtable.MainStageController;
@@ -25,7 +26,6 @@ import org.lebastudios.theroundtable.plugincashregister.products.ProductPaneCont
 import org.lebastudios.theroundtable.plugincashregister.products.ProductsUIController;
 import org.lebastudios.theroundtable.pluginreceiptmanager.PluginReceiptManager;
 import org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptViewerController;
-import org.lebastudios.theroundtable.plugincashregister.entities.ReceiptModification;
 import org.lebastudios.theroundtable.ui.BigDecimalField;
 import org.lebastudios.theroundtable.ui.LabeledTextField;
 
@@ -33,7 +33,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
@@ -77,8 +76,8 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         paymentMethodChoiceBox.getSelectionModel().selectedItemProperty().addListener((_, oldValue, newValue) ->
         {
             if (newValue == null || oldValue == newValue) return;
-            
-            if (newValue == PaymentMethod.CARD) 
+
+            if (newValue == PaymentMethod.CARD)
             {
                 paymentAmountField.setValue(new BigDecimal(totalLabel.getText()));
                 paymentAmountField.setDisable(true);
@@ -88,7 +87,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                 paymentAmountField.setDisable(false);
             }
         });
-        
+
         paymentAmountField.getOnValueChangeEvent().addListener(_ -> updateCalculatedValues());
 
         initializeTableView();
@@ -96,14 +95,59 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
     private void initializeTableView()
     {
+        class CustomTextFieldTableCell extends TextFieldTableCell<ProductTableItem, String>
+        {
+            private String oldValue;
+            private boolean executeOnce = false;
+            
+            public CustomTextFieldTableCell()
+            {
+                super(new DefaultStringConverter());
+            }
+
+            @Override
+            public void startEdit()
+            {
+                super.startEdit();
+                oldValue = getItem();
+
+                if (!executeOnce) 
+                {
+                    executeOnce = true;
+                    TextField textField = (TextField) getGraphic();
+                    textField.focusedProperty().addListener((_, _, isFocused) ->
+                    {
+                        if (isFocused) return;
+
+                        if (textField.getText() == null || textField.getText().isBlank())
+                        {
+                            cancelEdit();
+                        }
+                        else
+                        {
+                            commitEdit(textField.getText());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void cancelEdit()
+            {
+                setText(oldValue);
+                super.cancelEdit();
+            }
+        }
+
         productsTableView.setEditable(true);
         productsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
 
         TableColumn<ProductTableItem, String> col1 =
                 ((TableColumn<ProductTableItem, String>) productsTableView.getColumns().getFirst());
         col1.setCellValueFactory(cellData -> cellData.getValue().qty);
         col1.setEditable(true);
-        col1.setCellFactory(TextFieldTableCell.forTableColumn());
+        col1.setCellFactory(tc -> new CustomTextFieldTableCell());
         col1.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
@@ -133,6 +177,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         col2.setCellValueFactory(cellData -> cellData.getValue().productName);
         col2.setEditable(true);
         col2.setCellFactory(TextFieldTableCell.forTableColumn());
+        col2.setCellFactory(tc -> new CustomTextFieldTableCell());
         col2.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
@@ -144,6 +189,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         col3.setCellValueFactory(cellData -> cellData.getValue().price);
         col3.setEditable(true);
         col3.setCellFactory(TextFieldTableCell.forTableColumn());
+        col3.setCellFactory(tc -> new CustomTextFieldTableCell());
         col3.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
@@ -175,11 +221,11 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         totalLabel.setText(BigDecimalOperations.toString(total));
         changeLabel.setText(BigDecimalOperations.toString(paymentAmountField.getValue().subtract(total)));
 
-        if (paymentMethodChoiceBox.getValue() == PaymentMethod.CARD) 
+        if (paymentMethodChoiceBox.getValue() == PaymentMethod.CARD)
         {
             paymentAmountField.setValue(total);
         }
-        
+
         taxesDesgloseContainer.getChildren().clear();
 
         calculateTotalPerTax().forEach((key, value) ->
@@ -297,7 +343,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
                 return;
             }
-            
+
             StringBuffer billNumber = new StringBuffer();
             PluginCashRegisterEvents.onRequestNewRectificationBillNumber.invoke(receipt.getId(), billNumber);
 
@@ -307,7 +353,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             }
 
             onReceiptSaved.accept(receipt);
-            
+
             exit();
         }).instantiate();
     }
@@ -319,8 +365,8 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             UIEffects.shakeNode(changeLabel);
             return false;
         }
-        
-        if (modificationReasonTextArea.getText().isBlank()) 
+
+        if (modificationReasonTextArea.getText().isBlank())
         {
             UIEffects.shakeNode(modificationReasonTextArea);
             return false;
@@ -328,13 +374,13 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
         final String customerName = customerNameField.getText();
         final String customerId = customerIdField.getText();
-        
-        if (!(customerName.isBlank() && customerId.isBlank()) && (customerName.isBlank() || customerId.isBlank())) 
+
+        if (!(customerName.isBlank() && customerId.isBlank()) && (customerName.isBlank() || customerId.isBlank()))
         {
             UIEffects.shakeNode(customerNameField.getParent());
             return false;
         }
-        
+
         return true;
     }
 
@@ -350,12 +396,12 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     private Receipt createReceipt()
     {
         Receipt receipt = new Receipt();
-        
-        if (!customerNameField.getText().isBlank() && !customerIdField.getText().isBlank()) 
+
+        if (!customerNameField.getText().isBlank() && !customerIdField.getText().isBlank())
         {
             receipt.setClient(customerNameField.getText().trim(), customerIdField.getText().trim());
         }
-        
+
         receipt.setEmployeeName(attendantNameField.getText());
         receipt.setTableName(tableNameField.getText());
         receipt.setPaymentAmount(paymentAmountField.getValue());
@@ -368,12 +414,12 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                 {
                     BigDecimal taxesPercentage = entry.getKey();
                     BigDecimal total = entry.getValue();
-                    
+
                     var base = BigDecimalOperations.dividePrecise(total, taxesPercentage.add(BigDecimal.ONE));
                     return total.subtract(base);
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
+
         receipt.setTaxesAmount(totalTaxes);
 
         HashSet<Product_Receipt> products = new HashSet<>();
