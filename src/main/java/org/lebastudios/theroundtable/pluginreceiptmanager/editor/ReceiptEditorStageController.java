@@ -2,9 +2,6 @@ package org.lebastudios.theroundtable.pluginreceiptmanager.editor;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -13,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.DefaultStringConverter;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.lebastudios.theroundtable.MainStageController;
@@ -100,53 +96,82 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
     private void initializeTableView()
     {
-        class CustomTextFieldTableCell extends TextFieldTableCell<ProductTableItem, String>
+        class CustomTextFieldTableCell extends TableCell<ProductTableItem, String>
         {
-            private String oldValue;
-            private boolean executeOnce = false;
-            
+            private final TextField textField;
+
             public CustomTextFieldTableCell()
             {
-                super(new DefaultStringConverter());
+                textField = new TextField();
+                textField.setStyle("-fx-background-color: white; -fx-border-color: #0d8aff;");
+
+                textField.addEventFilter(KeyEvent.KEY_PRESSED, event ->
+                {
+                    if (event.getCode() == KeyCode.ENTER)
+                    {
+                        commitEdit(textField.getText());
+                        event.consume();
+                        return;
+                    }
+                    
+                    if (event.getCode() == KeyCode.ESCAPE)
+                    {
+                        cancelEdit();
+                        event.consume();
+                    }
+                });
+                
+                textField.focusedProperty().addListener((_, _, newValue) ->
+                {
+                    if (newValue) return;
+                    
+                    commitEdit(textField.getText());
+                });
             }
 
             @Override
             public void startEdit()
             {
                 super.startEdit();
-                oldValue = getItem();
-
-                if (executeOnce) return;
-                executeOnce = true;
-                
-                TextField textField = (TextField) getGraphic();
-                textField.focusedProperty().addListener((_, _, newValue) ->
+                if (textField != null)
                 {
-                    if (newValue) return;
-
-                    System.out.println("Focus lost");
-
-                    if (textField.getText() == null || textField.getText().isBlank())
-                    {
-                        cancelEdit();
-                    }
-                    else
-                    {
-                        System.out.println("Committing edit");
-                        // Firing enter event
-                        Event.fireEvent(textField, new KeyEvent(
-                                KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER,
-                                false, false, false, false
-                        ));
-                    }
-                });
+                    textField.setText(getItem());
+                    setGraphic(textField);
+                    setText(null);
+                    textField.requestFocus();
+                }
             }
 
             @Override
             public void cancelEdit()
             {
-                setText(oldValue);
                 super.cancelEdit();
+                setText(getItem());
+                textField.setText(getItem());
+                setGraphic(null);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (empty || item == null)
+                {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                if (isEditing())
+                {
+                    setGraphic(textField);
+                    setText(null);
+                }
+                else
+                {
+                    setGraphic(null);
+                    setText(item);
+                }
             }
         }
 
@@ -162,7 +187,6 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         col1.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
-            System.out.println("Updating qty");
 
             if (!event.getNewValue().matches("\\d+(\\.\\d+)?"))
             {
