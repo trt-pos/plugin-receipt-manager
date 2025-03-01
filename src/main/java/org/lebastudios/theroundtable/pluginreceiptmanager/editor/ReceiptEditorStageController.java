@@ -2,10 +2,15 @@ package org.lebastudios.theroundtable.pluginreceiptmanager.editor;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DefaultStringConverter;
@@ -111,24 +116,30 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                 super.startEdit();
                 oldValue = getItem();
 
-                if (!executeOnce) 
+                if (executeOnce) return;
+                executeOnce = true;
+                
+                TextField textField = (TextField) getGraphic();
+                textField.focusedProperty().addListener((_, _, newValue) ->
                 {
-                    executeOnce = true;
-                    TextField textField = (TextField) getGraphic();
-                    textField.focusedProperty().addListener((_, _, isFocused) ->
-                    {
-                        if (isFocused) return;
+                    if (newValue) return;
 
-                        if (textField.getText() == null || textField.getText().isBlank())
-                        {
-                            cancelEdit();
-                        }
-                        else
-                        {
-                            commitEdit(textField.getText());
-                        }
-                    });
-                }
+                    System.out.println("Focus lost");
+
+                    if (textField.getText() == null || textField.getText().isBlank())
+                    {
+                        cancelEdit();
+                    }
+                    else
+                    {
+                        System.out.println("Committing edit");
+                        // Firing enter event
+                        Event.fireEvent(textField, new KeyEvent(
+                                KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER,
+                                false, false, false, false
+                        ));
+                    }
+                });
             }
 
             @Override
@@ -151,6 +162,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         col1.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
+            System.out.println("Updating qty");
 
             if (!event.getNewValue().matches("\\d+(\\.\\d+)?"))
             {
