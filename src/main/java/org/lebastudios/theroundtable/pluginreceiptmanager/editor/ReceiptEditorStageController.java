@@ -1,5 +1,6 @@
 package org.lebastudios.theroundtable.pluginreceiptmanager.editor;
 
+import com.github.anastaciocintra.escpos.EscPos;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -19,17 +20,22 @@ import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.dialogs.ConfirmationTextDialogController;
 import org.lebastudios.theroundtable.dialogs.InformationTextDialogController;
 import org.lebastudios.theroundtable.locale.LangFileLoader;
+import org.lebastudios.theroundtable.logs.Logs;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
 import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
 import org.lebastudios.theroundtable.plugincashregister.cash.PaymentMethod;
 import org.lebastudios.theroundtable.plugincashregister.entities.*;
+import org.lebastudios.theroundtable.plugincashregister.printers.CashRegisterPrinters;
 import org.lebastudios.theroundtable.plugincashregister.products.ProductPaneController;
 import org.lebastudios.theroundtable.plugincashregister.products.ProductsUIController;
 import org.lebastudios.theroundtable.pluginreceiptmanager.PluginReceiptManager;
 import org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptViewerController;
+import org.lebastudios.theroundtable.printers.PrinterManager;
+import org.lebastudios.theroundtable.printers.Styles;
 import org.lebastudios.theroundtable.ui.BigDecimalField;
 import org.lebastudios.theroundtable.ui.LabeledTextField;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -113,18 +119,18 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                         event.consume();
                         return;
                     }
-                    
+
                     if (event.getCode() == KeyCode.ESCAPE)
                     {
                         cancelEdit();
                         event.consume();
                     }
                 });
-                
+
                 textField.focusedProperty().addListener((_, _, newValue) ->
                 {
                     if (newValue) return;
-                    
+
                     commitEdit(textField.getText());
                 });
             }
@@ -427,7 +433,21 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     }
 
     @FXML
-    private void printPreview() {}
+    private void printPreview()
+    {
+        if (!validateForm()) return;
+
+        Receipt receipt = createReceipt();
+        try (EscPos _ = CashRegisterPrinters.getInstance().printReceipt(receipt,
+                        PrinterManager.getInstance().getDefaultPrintService())
+                .writeLF(Styles.TITLE, "PREVIEW")
+                .feed(5)
+                .cut(EscPos.CutMode.PART)) {}
+        catch (IOException e)
+        {
+            Logs.getInstance().log("Error printing receipt preview", e);
+        }
+    }
 
     private Receipt createReceipt()
     {
