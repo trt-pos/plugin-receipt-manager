@@ -111,6 +111,14 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                 textField = new TextField();
                 textField.setStyle("-fx-background-color: white; -fx-border-color: #0d8aff;");
 
+                this.setOnMouseClicked(_ ->
+                {
+                    if (isEmpty() || this.getItem() == null) return;
+                    if (isEditing()) return; 
+                    
+                    startEdit();
+                });
+                
                 textField.addEventFilter(KeyEvent.KEY_PRESSED, event ->
                 {
                     if (event.getCode() == KeyCode.ENTER)

@@ -17,6 +17,7 @@ import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.locale.LangFileLoader;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
 import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
+import org.lebastudios.theroundtable.plugincashregister.cash.PaymentMethod;
 import org.lebastudios.theroundtable.plugincashregister.entities.Product;
 import org.lebastudios.theroundtable.plugincashregister.entities.Product_Receipt;
 import org.lebastudios.theroundtable.plugincashregister.entities.Receipt;
@@ -118,7 +119,7 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
                     taxesDesgloseContainer.getChildren().add(createTaxesLabel(key, value))
             );
             paymentAmountLabel.setText(BigDecimalOperations.toString(receipt.getPaymentAmount()));
-            paymentMethodLabel.setText(receipt.getPaymentMethod());
+            paymentMethodLabel.setText(PaymentMethod.valueOf(receipt.getPaymentMethod()).translate());
 
             var receiptTotal = receipt.getTransaction().getAmount();
             changeLabel.setText(BigDecimalOperations.toString(receipt.getPaymentAmount().subtract(receiptTotal)));
