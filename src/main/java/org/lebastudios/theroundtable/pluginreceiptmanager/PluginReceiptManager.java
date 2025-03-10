@@ -2,7 +2,6 @@ package org.lebastudios.theroundtable.pluginreceiptmanager;
 
 import javafx.scene.control.Button;
 import org.lebastudios.theroundtable.MainStageController;
-import org.lebastudios.theroundtable.plugincashregister.entities.ReceiptModification;
 import org.lebastudios.theroundtable.plugins.IPlugin;
 import org.lebastudios.theroundtable.ui.IconButton;
 
@@ -22,14 +21,6 @@ public class PluginReceiptManager implements IPlugin
         button.setOnAction(_ ->
                 MainStageController.getInstance().setCentralNode(new ReceiptManagerPaneController()));
         return List.of(button);
-    }
-
-    @Override
-    public List<Class<?>> getPluginEntities()
-    {
-        return List.of(
-                ReceiptModification.class
-        );
     }
 
     @Override
