@@ -6,7 +6,7 @@
 
     <groupId>org.lebastudios.theroundtable</groupId>
     <artifactId>plugin-receipt-manager</artifactId>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
     <name>plugin-receipt-manager</name>
     <packaging>jar</packaging>
 

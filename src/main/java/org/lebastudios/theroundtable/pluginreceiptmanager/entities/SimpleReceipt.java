@@ -22,16 +22,29 @@ public class SimpleReceipt
     private LocalDateTime date = LocalDateTime.now();
     private Receipt.Status status;
     
+    private String billNumber = null;
+
+    public SimpleReceipt(int id, LocalDateTime date, Receipt.Status status)
+    {
+        this.id = id;
+        this.date = date;
+        this.status = status;
+    }
+
     @Override
     public String toString()
     {
-        StringBuffer billNumber = new StringBuffer();
+        if (billNumber == null) 
+        {
+            StringBuffer billNumberSb = new StringBuffer();
 
-        PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(this.getId(), billNumber);
+            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(this.getId(), billNumberSb);
+
+            billNumber = billNumberSb.isEmpty() ? "" : (" (" + billNumberSb + ")");
+        }
         
-        String receiptId = this.getId() + (billNumber.isEmpty() ? "" : (" (" + billNumber + ")"));
         
-        return LangFileLoader.getTranslation("word.receipt") + " " + receiptId
+        return LangFileLoader.getTranslation("word.receipt") + " " + this.getId() + billNumber
                 + " - " + this.getDate().toLocalDate()
                 + " " + LangFileLoader.getTranslation("word.at")
                 + " " + this.getDate().toLocalTime().truncatedTo(ChronoUnit.SECONDS);
