@@ -2,6 +2,7 @@ package org.lebastudios.theroundtable.pluginreceiptmanager;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -36,12 +37,12 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
 {
     @Getter private static ReceiptManagerPaneController instance;
 
-    @FXML private MultipleItemsListView<SimpleReceipt> receiptList;
-    @FXML private BorderPane rightView;
-    @FXML private DatePicker startDate;
-    @FXML private DatePicker endDate;
-    @FXML private TabPane statsTabPane;
-    @FXML private SearchBox searchBox;
+    @FXML public MultipleItemsListView<SimpleReceipt> receiptList;
+    @FXML public BorderPane rightView;
+    @FXML public DatePicker startDate;
+    @FXML public DatePicker endDate;
+    @FXML public TabPane statsTabPane;
+    @FXML public SearchBox searchBox;
 
     private final Event1<List<SimpleReceipt>> onFoundReceipt = new Event1<>();
     private ListItemsGenerator contentGenerator;
@@ -104,11 +105,11 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
                 endDate.getValue().atTime(23, 59, 59)
         ));
         
-        search();
+        search(null);
     }
 
     @FXML
-    private void search()
+    public void search(ActionEvent actionEvent)
     {
         searchBox.clear();
     }
@@ -193,12 +194,6 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
     public void showStats()
     {
         rightView.setCenter(statsTabPane);
-    }
-
-    @Override
-    public Class<?> getBundleClass()
-    {
-        return PluginReceiptManager.class;
     }
 
     private record ListItemsGenerator(String textFilter, LocalDateTime startDate, LocalDateTime endDate)

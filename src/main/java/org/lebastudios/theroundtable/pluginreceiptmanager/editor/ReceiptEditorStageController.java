@@ -3,6 +3,7 @@ package org.lebastudios.theroundtable.pluginreceiptmanager.editor;
 import com.github.anastaciocintra.escpos.EscPos;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -20,7 +21,6 @@ import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.dialogs.ConfirmationTextDialogController;
 import org.lebastudios.theroundtable.dialogs.InformationTextDialogController;
 import org.lebastudios.theroundtable.locale.LangFileLoader;
-import org.lebastudios.theroundtable.logs.Logs;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
 import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
 import org.lebastudios.theroundtable.plugincashregister.cash.PaymentMethod;
@@ -28,8 +28,8 @@ import org.lebastudios.theroundtable.plugincashregister.entities.*;
 import org.lebastudios.theroundtable.plugincashregister.printers.CashRegisterPrinters;
 import org.lebastudios.theroundtable.plugincashregister.products.ProductPaneController;
 import org.lebastudios.theroundtable.plugincashregister.products.ProductsUIController;
-import org.lebastudios.theroundtable.pluginreceiptmanager.PluginReceiptManager;
 import org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptViewerController;
+import org.lebastudios.theroundtable.printers.PrintTask;
 import org.lebastudios.theroundtable.printers.PrinterManager;
 import org.lebastudios.theroundtable.printers.Styles;
 import org.lebastudios.theroundtable.ui.BigDecimalField;
@@ -45,21 +45,21 @@ import java.util.function.Consumer;
 
 public class ReceiptEditorStageController extends PaneController<ReceiptEditorStageController>
 {
-    @FXML private Label receiptIDLabel;
-    @FXML private Label receiptTimeLabel;
-    @FXML private Label receiptDateLabel;
-    @FXML private LabeledTextField customerNameField;
-    @FXML private LabeledTextField customerIdField;
-    @FXML private LabeledTextField attendantNameField;
-    @FXML private LabeledTextField tableNameField;
-    @FXML private TableView<ProductTableItem> productsTableView;
-    @FXML private Label totalLabel;
-    @FXML private BigDecimalField paymentAmountField;
-    @FXML private ChoiceBox<PaymentMethod> paymentMethodChoiceBox;
-    @FXML private Label changeLabel;
-    @FXML private HBox centerContent;
-    @FXML private VBox taxesDesgloseContainer;
-    @FXML private TextArea modificationReasonTextArea;
+    @FXML public Label receiptIDLabel;
+    @FXML public Label receiptTimeLabel;
+    @FXML public Label receiptDateLabel;
+    @FXML public LabeledTextField customerNameField;
+    @FXML public LabeledTextField customerIdField;
+    @FXML public LabeledTextField attendantNameField;
+    @FXML public LabeledTextField tableNameField;
+    @FXML public TableView<ProductTableItem> productsTableView;
+    @FXML public Label totalLabel;
+    @FXML public BigDecimalField paymentAmountField;
+    @FXML public ChoiceBox<PaymentMethod> paymentMethodChoiceBox;
+    @FXML public Label changeLabel;
+    @FXML public HBox centerContent;
+    @FXML public VBox taxesDesgloseContainer;
+    @FXML public TextArea modificationReasonTextArea;
 
     @Setter private Consumer<Receipt> onReceiptSaved;
     private final Node lastAppCentralPane;
@@ -114,11 +114,11 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                 this.setOnMouseClicked(_ ->
                 {
                     if (isEmpty() || this.getItem() == null) return;
-                    if (isEditing()) return; 
-                    
+                    if (isEditing()) return;
+
                     startEdit();
                 });
-                
+
                 textField.addEventFilter(KeyEvent.KEY_PRESSED, event ->
                 {
                     if (event.getCode() == KeyCode.ENTER)
@@ -366,7 +366,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     }
 
     @FXML
-    private void save()
+    public void save(ActionEvent actionEvent)
     {
         if (!validateForm()) return;
 
@@ -404,7 +404,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
             onReceiptSaved.accept(receipt);
 
-            exit();
+            exit(null);
         }).instantiate();
     }
 
@@ -435,26 +435,17 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     }
 
     @FXML
-    private void exit()
+    public void exit(ActionEvent actionEvent)
     {
         MainStageController.getInstance().setCentralNode(lastAppCentralPane);
     }
 
     @FXML
-    private void printPreview()
+    public void printPreview(ActionEvent actionEvent)
     {
         if (!validateForm()) return;
-
-        Receipt receipt = createReceipt();
-        try (EscPos _ = CashRegisterPrinters.getInstance().printReceipt(receipt,
-                        PrinterManager.getInstance().getDefaultPrintService())
-                .writeLF(Styles.TITLE, "PREVIEW")
-                .feed(5)
-                .cut(EscPos.CutMode.PART)) {}
-        catch (IOException e)
-        {
-            Logs.getInstance().log("Error printing receipt preview", e);
-        }
+        
+        new ReceiptPreviewPrintTask(null).execute(true);
     }
 
     private Receipt createReceipt()
@@ -509,12 +500,6 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         return receipt;
     }
 
-    @Override
-    public Class<?> getBundleClass()
-    {
-        return PluginReceiptManager.class;
-    }
-
     @AllArgsConstructor
     private static class ProductTableItem
     {
@@ -554,6 +539,27 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             total.setValue(BigDecimalOperations.toString(
                     new BigDecimal(price.getValue()).multiply(new BigDecimal(qty.getValue())))
             );
+        }
+    }
+
+    private class ReceiptPreviewPrintTask extends PrintTask
+    {
+        public ReceiptPreviewPrintTask(EscPos escPos)
+        {
+            super(escPos);
+        }
+
+        @Override
+        protected EscPos print(EscPos escpos) throws IOException
+        {
+            updateMessage("Creating receipt");
+            Receipt receipt = createReceipt();
+            
+            updateMessage("Printing receipt");
+            return CashRegisterPrinters.getInstance().printReceipt(
+                    receipt,
+                    PrinterManager.getInstance().getDefaultPrintService()
+            ).writeLF(Styles.TITLE, "PREVIEW");
         }
     }
 }

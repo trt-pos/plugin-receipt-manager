@@ -3,6 +3,7 @@ package org.lebastudios.theroundtable.pluginreceiptmanager;
 import com.github.anastaciocintra.escpos.EscPos;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -30,7 +31,6 @@ import org.lebastudios.theroundtable.ui.LoadingPaneController;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.TreeMap;
@@ -39,20 +39,19 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
 {
     private final SimpleReceipt simpleReceipt;
 
-    @FXML private VBox root;
-    @FXML private Label receiptIDLabel;
-    @FXML private Label receiptDateLabel;
-    @FXML private Label receiptTimeLabel;
-    @FXML private Label customerNameLabel;
-    @FXML private Label attendantNameLabel;
-    @FXML private Label tableNameLabel;
-    @FXML private TableView<TableProduct> productListContainer;
-    @FXML private Label totalLabel;
-    @FXML private Label paymentAmountLabel;
-    @FXML private Label paymentMethodLabel;
-    @FXML private Label changeLabel;
-    @FXML private VBox taxesDesgloseContainer;
-    @FXML private IconTextButton editButton;
+    @FXML public Label receiptIDLabel;
+    @FXML public Label receiptDateLabel;
+    @FXML public Label receiptTimeLabel;
+    @FXML public Label customerNameLabel;
+    @FXML public Label attendantNameLabel;
+    @FXML public Label tableNameLabel;
+    @FXML public TableView<TableProduct> productListContainer;
+    @FXML public Label totalLabel;
+    @FXML public Label paymentAmountLabel;
+    @FXML public Label paymentMethodLabel;
+    @FXML public Label changeLabel;
+    @FXML public VBox taxesDesgloseContainer;
+    @FXML public IconTextButton editButton;
 
     @Setter private Runnable onClose = () -> {};
     
@@ -144,7 +143,7 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
     }
 
     @FXML
-    private void edit()
+    public void edit(ActionEvent actionEvent)
     {
         var receipt = Database.getInstance().connectQuery(session ->
         {
@@ -168,7 +167,7 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
     }
 
     @FXML
-    private void print()
+    public void print(ActionEvent actionEvent)
     {
         Database.getInstance().connectQuery(session ->
         {
@@ -186,25 +185,13 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
     }
 
     @FXML
-    private void close()
+    public void close(ActionEvent actionEvent)
     {
         ((Pane) root.getParent()).getChildren().remove(root);
         onClose.run();
     }
 
-    @Override
-    public Class<?> getBundleClass()
-    {
-        return PluginReceiptManager.class;
-    }
-
-    @Override
-    public URL getFXML()
-    {
-        return ReceiptViewerController.class.getResource("receiptViewer.fxml");
-    }
-
-    private record TableProduct(SimpleStringProperty qty, SimpleStringProperty name, SimpleStringProperty price,
+    public record TableProduct(SimpleStringProperty qty, SimpleStringProperty name, SimpleStringProperty price,
                                 SimpleStringProperty total)
     {
         private TableProduct(Product product, BigDecimal qty)

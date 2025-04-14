@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class BarChartController extends ChartController<XYChart.Series<Object, Object>>
 {
-    @FXML private BarChart<Object, Object> chart;
+    @FXML public BarChart<Object, Object> chart;
 
     @Override
     protected void initialize()
@@ -29,11 +29,5 @@ public class BarChartController extends ChartController<XYChart.Series<Object, O
     {
         chart.getData().clear();
         chart.getData().add(data);
-    }
-    
-    @Override
-    public URL getFXML()
-    {
-        return ChartController.class.getResource("barChart.fxml");
     }
 }

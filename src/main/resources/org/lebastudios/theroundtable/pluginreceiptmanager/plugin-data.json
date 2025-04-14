@@ -1,16 +1,18 @@
 {
   "pluginName": "Receipt Manager",
   "pluginId": "plugin-receipt-manager",
-  "pluginIcon": "receipt",
   "pluginDescription": "A plugin that allows you to manage receipts and your business income.",
-  "pluginVersion": "1.4.4",
+  "pluginVersion": "3.0.0",
   "pluginVendor": "Leba Studios - Software Solutions",
-  "pluginVendorUrl": "https://lebastudios.org",
-  "pluginRequiredCoreVersion": "2.5.0",
+  "pluginRequiredCoreVersion": "3.0.0",
   "pluginDependencies": [
     {
-      "pluginId": "plugin-cash-register",
-      "pluginVersion": "1.5.0"
+      "pluginId": "desktop-app",
+      "pluginVersion": "3.0.0"
+    },
+    {
+      "pluginId": "desktop-app",
+      "pluginVersion": "3.0.0"
     }
   ]
 }

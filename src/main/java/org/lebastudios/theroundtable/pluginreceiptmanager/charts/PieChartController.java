@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class PieChartController extends ChartController<ObservableList<PieChart.Data>>
 {
-    @FXML private PieChart chart;
+    @FXML public PieChart chart;
 
     @Override
     protected void initialize()
@@ -25,11 +25,5 @@ public class PieChartController extends ChartController<ObservableList<PieChart.
     public void setData(ObservableList<PieChart.Data> data)
     {
         chart.setData(data);
-    }
-
-    @Override
-    public URL getFXML()
-    {
-        return ChartController.class.getResource("pieChart.fxml");
     }
 }

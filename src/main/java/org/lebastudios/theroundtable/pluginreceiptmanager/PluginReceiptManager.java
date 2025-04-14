@@ -2,11 +2,19 @@ package org.lebastudios.theroundtable.pluginreceiptmanager;
 
 import javafx.scene.control.Button;
 import org.lebastudios.theroundtable.MainStageController;
+import org.lebastudios.theroundtable.fxml2java.CompileFxml;
 import org.lebastudios.theroundtable.plugins.IPlugin;
 import org.lebastudios.theroundtable.ui.IconButton;
 
 import java.util.List;
 
+@CompileFxml(
+        directories = {
+                "org/lebastudios/theroundtable/pluginreceiptmanager",
+                "org/lebastudios/theroundtable/pluginreceiptmanager/charts",
+                "org/lebastudios/theroundtable/pluginreceiptmanager/editor",
+        }
+)
 public class PluginReceiptManager implements IPlugin
 {
     private static final int DB_VERSION = 1;
