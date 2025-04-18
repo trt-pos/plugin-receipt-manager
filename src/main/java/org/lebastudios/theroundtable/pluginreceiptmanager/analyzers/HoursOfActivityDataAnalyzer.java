@@ -27,7 +27,7 @@ public class HoursOfActivityDataAnalyzer implements IDataAnalyzer
             totalReceipts.getAndIncrement();
         });
 
-        XYChart.Series<Object, Object> series = new XYChart.Series<>();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
 
         for (int i = 0; i < 24; i++)
         {
@@ -44,6 +44,6 @@ public class HoursOfActivityDataAnalyzer implements IDataAnalyzer
         barChartController.setData(series);
         barChartController.setVerticalLabel("%");
         
-        return barChartController.getRoot();
+        return barChartController.getChart();
     }
 }

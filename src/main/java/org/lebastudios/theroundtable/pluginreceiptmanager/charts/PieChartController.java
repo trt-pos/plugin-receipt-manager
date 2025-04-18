@@ -1,24 +1,27 @@
 package org.lebastudios.theroundtable.pluginreceiptmanager.charts;
 
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.scene.CacheHint;
 import javafx.scene.chart.PieChart;
 
-import java.net.URL;
-
-public class PieChartController extends ChartController<ObservableList<PieChart.Data>>
+public class PieChartController extends ChartController<ObservableList<PieChart.Data>, PieChart>
 {
-    @FXML public PieChart chart;
-
     @Override
-    protected void initialize()
+    protected PieChart charInit()
     {
+        PieChart chart = new PieChart();
+
+        chart.setLegendVisible(false);
+        chart.maxHeight(Double.MAX_VALUE);
+        chart.maxWidth(Double.MAX_VALUE);
+
         chart.setAnimated(false);
         chart.setCache(true);
         chart.setCacheHint(CacheHint.SPEED);
-        
+
         chart.setLabelLineLength(10);
+        
+        return chart;
     }
 
     @Override

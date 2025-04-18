@@ -19,15 +19,9 @@ import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.events.Event1;
 import org.lebastudios.theroundtable.events.IEventMethod1;
 import org.lebastudios.theroundtable.locale.LangFileLoader;
-import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.HoursOfActivityDataAnalyzer;
-import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IDataAnalyzer;
-import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IncomeDataAnalyzer;
-import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.ProductsSoldAnalyzer;
+import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.*;
 import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
-import org.lebastudios.theroundtable.ui.IconView;
-import org.lebastudios.theroundtable.ui.LoadingPaneController;
-import org.lebastudios.theroundtable.ui.MultipleItemsListView;
-import org.lebastudios.theroundtable.ui.SearchBox;
+import org.lebastudios.theroundtable.ui.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -199,7 +193,8 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
     private record ListItemsGenerator(String textFilter, LocalDateTime startDate, LocalDateTime endDate)
             implements MultipleItemsListView.ItemsGenerator<SimpleReceipt>
     {
-
+        private static final String SQL_FROM = "";
+        
         @Override
         public List<SimpleReceipt> generateItems(int from, int to)
         {
@@ -217,17 +212,29 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
         {
             return Database.getInstance().connectQuery(session ->
             {
-                return generateQuery(session).getResultCount();
+                final var parseInt = textFilter.matches("\\d+") ? Integer.parseInt(textFilter) : -1;
+                
+                return session.createQuery("select count(*) " +
+                                "from Receipt r " +
+                                "where r.id = :id or (r.transaction.date >= :startDate " +
+                                "and r.transaction.date <= :endDate " +
+                                "and (r.clientName like :searchTextPartial " +
+                                "or r.employeeName like :searchTextPartial " +
+                                "or r.tableName like :searchTextPartial)) " +
+                                "order by r.id desc ", Long.class)
+                        .setParameter("id", parseInt)
+                        .setParameter("searchTextPartial", "%" + textFilter + "%")
+                        .setParameter("startDate", startDate)
+                        .setParameter("endDate", endDate)
+                        .getSingleResult();
             });
         }
 
         private Query<SimpleReceipt> generateQuery(Session session)
         {
-            Query<SimpleReceipt> query;
-
             final var parseInt = textFilter.matches("\\d+") ? Integer.parseInt(textFilter) : -1;
 
-            query = session.createQuery("select new SimpleReceipt(r.id, r.transaction.date, r.status) " +
+            return session.createQuery("select new SimpleReceipt(r.id, r.transaction.date, r.status) " +
                             "from Receipt r " +
                             "where r.id = :id or (r.transaction.date >= :startDate " +
                             "and r.transaction.date <= :endDate " +
@@ -239,8 +246,6 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
                     .setParameter("searchTextPartial", "%" + textFilter + "%")
                     .setParameter("startDate", startDate)
                     .setParameter("endDate", endDate);
-
-            return query;
         }
 
         public List<SimpleReceipt> queryAll()

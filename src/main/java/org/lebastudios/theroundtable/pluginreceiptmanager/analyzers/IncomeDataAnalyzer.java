@@ -25,7 +25,7 @@ public class IncomeDataAnalyzer implements IDataAnalyzer
             );
         });
 
-        XYChart.Series<Object, Object> series = new XYChart.Series<>();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
 
         for (int i = 0; i < 24; i++)
         {
@@ -41,6 +41,6 @@ public class IncomeDataAnalyzer implements IDataAnalyzer
         barChartController.setVerticalLabel("€");
         barChartController.setData(series);
         
-        return barChartController.getRoot();
+        return barChartController.getChart();
     }
 }

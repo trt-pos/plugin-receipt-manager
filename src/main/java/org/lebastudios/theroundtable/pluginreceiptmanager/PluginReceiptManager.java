@@ -11,7 +11,6 @@ import java.util.List;
 @CompileFxml(
         directories = {
                 "org/lebastudios/theroundtable/pluginreceiptmanager",
-                "org/lebastudios/theroundtable/pluginreceiptmanager/charts",
                 "org/lebastudios/theroundtable/pluginreceiptmanager/editor",
         }
 )

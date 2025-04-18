@@ -1,13 +1,18 @@
 package org.lebastudios.theroundtable.pluginreceiptmanager.charts;
 
-import org.lebastudios.theroundtable.controllers.PaneController;
+import lombok.Getter;
 
-public abstract class ChartController<T> extends PaneController<ChartController<T>>
+@Getter
+public abstract class ChartController<T, C>
 {
+    protected C chart;
+    
     public ChartController()
     {
-        this.getRoot();
+        chart = charInit();
     }
+    
+    protected abstract C charInit();
     
     public abstract void setData(T data);
 }

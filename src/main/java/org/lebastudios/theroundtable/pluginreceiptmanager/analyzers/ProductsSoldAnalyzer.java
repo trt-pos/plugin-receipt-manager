@@ -57,6 +57,6 @@ public class ProductsSoldAnalyzer implements IDataAnalyzer
         final var pieChartController = new PieChartController();
         pieChartController.setData(pieChartData);
         
-        return pieChartController.getRoot();
+        return pieChartController.getChart();
     }
 }
