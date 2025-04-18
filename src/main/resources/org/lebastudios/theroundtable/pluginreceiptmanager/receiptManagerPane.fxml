@@ -5,7 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import org.lebastudios.theroundtable.ui.MultipleItemsListView?>
 <?import org.lebastudios.theroundtable.ui.SearchBox?>
-<SplitPane dividerPositions="0.40" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane dividerPositions="0.40"
+           fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptManagerPaneController"
+           xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
     <VBox spacing="5">
         <padding>
             <Insets bottom="10" left="10" right="10" top="10"/>

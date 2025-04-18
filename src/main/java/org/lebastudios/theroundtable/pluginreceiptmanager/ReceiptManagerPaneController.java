@@ -19,9 +19,15 @@ import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.events.Event1;
 import org.lebastudios.theroundtable.events.IEventMethod1;
 import org.lebastudios.theroundtable.locale.LangFileLoader;
-import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.*;
+import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.HoursOfActivityDataAnalyzer;
+import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IDataAnalyzer;
+import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IncomeDataAnalyzer;
+import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.ProductsSoldAnalyzer;
 import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
-import org.lebastudios.theroundtable.ui.*;
+import org.lebastudios.theroundtable.ui.IconView;
+import org.lebastudios.theroundtable.ui.LoadingPaneController;
+import org.lebastudios.theroundtable.ui.MultipleItemsListView;
+import org.lebastudios.theroundtable.ui.SearchBox;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -98,7 +104,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
                 startDate.getValue().atStartOfDay(),
                 endDate.getValue().atTime(23, 59, 59)
         ));
-        
+
         search(null);
     }
 
@@ -193,17 +199,21 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
     private record ListItemsGenerator(String textFilter, LocalDateTime startDate, LocalDateTime endDate)
             implements MultipleItemsListView.ItemsGenerator<SimpleReceipt>
     {
-        private static final String SQL_FROM = "";
-        
+        private static final String COMMON_QUERY_SQL = "from Receipt r " +
+                "where r.id = :id or (r.transaction.date >= :startDate " +
+                "and r.transaction.date <= :endDate " +
+                "and (r.clientName like :searchTextPartial " +
+                "or r.employeeName like :searchTextPartial " +
+                "or r.tableName like :searchTextPartial)) " +
+                "order by r.id desc";
+
         @Override
         public List<SimpleReceipt> generateItems(int from, int to)
         {
             return Database.getInstance().connectQuery(session ->
             {
                 return generateQuery(session).setFirstResult(from)
-                        .setMaxResults(to)
-                        .stream()
-                        .toList();
+                        .setMaxResults(to).list();
             });
         }
 
@@ -212,40 +222,12 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
         {
             return Database.getInstance().connectQuery(session ->
             {
-                final var parseInt = textFilter.matches("\\d+") ? Integer.parseInt(textFilter) : -1;
-                
-                return session.createQuery("select count(*) " +
-                                "from Receipt r " +
-                                "where r.id = :id or (r.transaction.date >= :startDate " +
-                                "and r.transaction.date <= :endDate " +
-                                "and (r.clientName like :searchTextPartial " +
-                                "or r.employeeName like :searchTextPartial " +
-                                "or r.tableName like :searchTextPartial)) " +
-                                "order by r.id desc ", Long.class)
-                        .setParameter("id", parseInt)
-                        .setParameter("searchTextPartial", "%" + textFilter + "%")
-                        .setParameter("startDate", startDate)
-                        .setParameter("endDate", endDate)
-                        .getSingleResult();
+                Query<Long> countQuery = session.createQuery("select count(*) " + COMMON_QUERY_SQL, Long.class);
+
+                assignQueryParams(countQuery);
+
+                return countQuery.getSingleResult();
             });
-        }
-
-        private Query<SimpleReceipt> generateQuery(Session session)
-        {
-            final var parseInt = textFilter.matches("\\d+") ? Integer.parseInt(textFilter) : -1;
-
-            return session.createQuery("select new SimpleReceipt(r.id, r.transaction.date, r.status) " +
-                            "from Receipt r " +
-                            "where r.id = :id or (r.transaction.date >= :startDate " +
-                            "and r.transaction.date <= :endDate " +
-                            "and (r.clientName like :searchTextPartial " +
-                            "or r.employeeName like :searchTextPartial " +
-                            "or r.tableName like :searchTextPartial)) " +
-                            "order by r.id desc ", SimpleReceipt.class)
-                    .setParameter("id", parseInt)
-                    .setParameter("searchTextPartial", "%" + textFilter + "%")
-                    .setParameter("startDate", startDate)
-                    .setParameter("endDate", endDate);
         }
 
         public List<SimpleReceipt> queryAll()
@@ -254,6 +236,28 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
             {
                 return generateQuery(session).list();
             });
+        }
+
+        private Query<SimpleReceipt> generateQuery(Session session)
+        {
+            Query<SimpleReceipt> contentQuery = session.createQuery(
+                    "select new SimpleReceipt(r.id, r.transaction.date, r.status) " + COMMON_QUERY_SQL,
+                    SimpleReceipt.class
+            );
+
+            assignQueryParams(contentQuery);
+
+            return contentQuery;
+        }
+
+        private void assignQueryParams(Query<?> query)
+        {
+            final var parseInt = textFilter.matches("\\d+") ? Integer.parseInt(textFilter) : -1;
+
+            query.setParameter("id", parseInt)
+                    .setParameter("searchTextPartial", "%" + textFilter + "%")
+                    .setParameter("startDate", startDate)
+                    .setParameter("endDate", endDate);
         }
     }
 }
