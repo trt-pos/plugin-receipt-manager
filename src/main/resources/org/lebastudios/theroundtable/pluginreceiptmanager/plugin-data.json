@@ -4,14 +4,14 @@
   "pluginDescription": "A plugin that allows you to manage receipts and your business income.",
   "pluginVersion": "3.0.0",
   "pluginVendor": "Leba Studios - Software Solutions",
-  "pluginRequiredCoreVersion": "3.0.0",
+  "pluginVendorUrl": "https://lebastudios.org",
   "pluginDependencies": [
     {
       "pluginId": "desktop-app",
       "pluginVersion": "3.0.0"
     },
     {
-      "pluginId": "desktop-app",
+      "pluginId": "plugin-cash-register",
       "pluginVersion": "3.0.0"
     }
   ]
