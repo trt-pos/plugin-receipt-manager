@@ -3,7 +3,7 @@ package org.lebastudios.theroundtable.pluginreceiptmanager.charts;
 import javafx.geometry.Side;
 import javafx.scene.CacheHint;
 import javafx.scene.chart.*;
-import org.lebastudios.theroundtable.locale.LangFileLoader;
+import org.lebastudios.theroundtable.locale.Translator;
 
 public class BarChartController extends ChartController<XYChart.Series<String, Number>, BarChart<String, Number>>
 {
@@ -11,7 +11,7 @@ public class BarChartController extends ChartController<XYChart.Series<String, N
     protected BarChart<String, Number> charInit()
     {
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel(LangFileLoader.getTranslation("word.hours"));
+        xAxis.setLabel(Translator.getInstance().t("word.hours"));
         xAxis.setSide(Side.BOTTOM);
 
         NumberAxis yAxis = new NumberAxis();

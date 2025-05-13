@@ -15,10 +15,9 @@ import lombok.Setter;
 import org.lebastudios.theroundtable.MainStageController;
 import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
-import org.lebastudios.theroundtable.locale.LangFileLoader;
+import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
 import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
-import org.lebastudios.theroundtable.plugincashregister.cash.PaymentMethod;
 import org.lebastudios.theroundtable.plugincashregister.entities.Product;
 import org.lebastudios.theroundtable.plugincashregister.entities.Product_Receipt;
 import org.lebastudios.theroundtable.plugincashregister.entities.Receipt;
@@ -93,7 +92,7 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
 
             tableNameLabel.setText(receipt.getTableName());
             customerNameLabel.setText(receipt.getClientString());
-            attendantNameLabel.setText(receipt.getAttendantName());
+            attendantNameLabel.setText(receipt.getTransaction().getAccount().getName());
 
             List<Product_Receipt> products = session
                     .createQuery("select products from Receipt r where r.id = :id", Product_Receipt.class)
@@ -118,7 +117,7 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
                     taxesDesgloseContainer.getChildren().add(createTaxesLabel(key, value))
             );
             paymentAmountLabel.setText(BigDecimalOperations.toString(receipt.getPaymentAmount()));
-            paymentMethodLabel.setText(PaymentMethod.valueOf(receipt.getPaymentMethod()).translate());
+            paymentMethodLabel.setText(receipt.getTransaction().getMethod().translate());
 
             var receiptTotal = receipt.getTransaction().getAmount();
             changeLabel.setText(BigDecimalOperations.toString(receipt.getPaymentAmount().subtract(receiptTotal)));
@@ -134,8 +133,8 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
         var taxes = total.subtract(base);
 
         String text = BigDecimalOperations.toString(percentageOver100) + "  %  "
-                + LangFileLoader.getTranslation("word.iva")
-                + "  " + LangFileLoader.getTranslation("word.over") + "  "
+                + Translator.getInstance().t("word.iva")
+                + "  " + Translator.getInstance().t("word.over") + "  "
                 + BigDecimalOperations.toString(base) + " € " + "  "
                 + BigDecimalOperations.toString(taxes) + " € ";
 

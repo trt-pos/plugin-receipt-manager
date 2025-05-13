@@ -20,10 +20,9 @@ import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.dialogs.ConfirmationTextDialogController;
 import org.lebastudios.theroundtable.dialogs.InformationTextDialogController;
-import org.lebastudios.theroundtable.locale.LangFileLoader;
+import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
 import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
-import org.lebastudios.theroundtable.plugincashregister.cash.PaymentMethod;
 import org.lebastudios.theroundtable.plugincashregister.entities.*;
 import org.lebastudios.theroundtable.plugincashregister.printers.CashRegisterPrinters;
 import org.lebastudios.theroundtable.plugincashregister.products.ProductPaneController;
@@ -55,7 +54,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     @FXML public TableView<ProductTableItem> productsTableView;
     @FXML public Label totalLabel;
     @FXML public BigDecimalField paymentAmountField;
-    @FXML public ChoiceBox<PaymentMethod> paymentMethodChoiceBox;
+    @FXML public ChoiceBox<Transaction.PaymentMethod> paymentMethodChoiceBox;
     @FXML public Label changeLabel;
     @FXML public HBox centerContent;
     @FXML public VBox taxesDesgloseContainer;
@@ -77,14 +76,14 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
         centerContent.getChildren().addFirst(new ProductsUIController(false).getRoot());
 
-        paymentMethodChoiceBox.getItems().addAll(PaymentMethod.values());
-        paymentMethodChoiceBox.setConverter(PaymentMethod.converter);
+        paymentMethodChoiceBox.getItems().addAll(Transaction.PaymentMethod.values());
+        paymentMethodChoiceBox.setConverter(Transaction.PaymentMethod.STRING_CONVERTER);
 
         paymentMethodChoiceBox.getSelectionModel().selectedItemProperty().addListener((_, oldValue, newValue) ->
         {
             if (newValue == null || oldValue == newValue) return;
 
-            if (newValue == PaymentMethod.CARD)
+            if (newValue == Transaction.PaymentMethod.CARD)
             {
                 paymentAmountField.setValue(new BigDecimal(totalLabel.getText()));
                 paymentAmountField.setDisable(true);
@@ -271,7 +270,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         totalLabel.setText(BigDecimalOperations.toString(total));
         changeLabel.setText(BigDecimalOperations.toString(paymentAmountField.getValue().subtract(total)));
 
-        if (paymentMethodChoiceBox.getValue() == PaymentMethod.CARD)
+        if (paymentMethodChoiceBox.getValue() == Transaction.PaymentMethod.CARD)
         {
             paymentAmountField.setValue(total);
         }
@@ -323,7 +322,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                 customerIdField.setText(r.getClientIdentifier());
             }
 
-            attendantNameField.setText(r.getAttendantName());
+            attendantNameField.setText(r.getTransaction().getAccount().getName());
             tableNameField.setText(r.getTableName());
 
             r.getProducts().forEach(
@@ -332,7 +331,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
             totalLabel.setText(BigDecimalOperations.toString(transaction.getAmount()));
             paymentAmountField.setValue(r.getPaymentAmount());
-            paymentMethodChoiceBox.setValue(PaymentMethod.valueOf(r.getPaymentMethod()));
+            paymentMethodChoiceBox.setValue(r.getTransaction().getMethod());
             changeLabel.setText(
                     BigDecimalOperations.toString(r.getPaymentAmount().subtract(transaction.getAmount()))
             );
@@ -370,7 +369,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     {
         if (!validateForm()) return;
 
-        new ConfirmationTextDialogController(LangFileLoader.getTranslation("confirmdialog.editreceipt"), response ->
+        new ConfirmationTextDialogController(Translator.getInstance().t("confirmdialog.editreceipt"), response ->
         {
             if (!response) return;
 
@@ -388,7 +387,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             if (!result)
             {
                 new InformationTextDialogController(
-                        LangFileLoader.getTranslation("infodialog.errorsavingmodifiedreceipt")
+                        Translator.getInstance().t("infodialog.errorsavingmodifiedreceipt")
                 ).instantiate();
 
                 return;
@@ -456,11 +455,9 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         {
             receipt.setClient(customerNameField.getText().trim(), customerIdField.getText().trim());
         }
-
-        receipt.setEmployeeName(attendantNameField.getText());
+        
         receipt.setTableName(tableNameField.getText());
         receipt.setPaymentAmount(paymentAmountField.getValue());
-        receipt.setPaymentMethod(paymentMethodChoiceBox.getValue().name());
 
         BigDecimal totalTaxes = calculateTotalPerTax()
                 .entrySet()
@@ -493,9 +490,11 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         transaction.setAmount(new BigDecimal(totalLabel.getText()));
         transaction.setDate(LocalDateTime.now());
         transaction.setReceipt(receipt);
+        transaction.setAccount(0);
+        transaction.setMethod(paymentMethodChoiceBox.getValue());
         receipt.setTransaction(transaction);
 
-        transaction.setDescription(LangFileLoader.getTranslation("phrase.rectbillof") + " " + receiptIDLabel.getText());
+        transaction.setDescription(Translator.getInstance().t("phrase.rectbillof") + " " + receiptIDLabel.getText());
 
         return receipt;
     }

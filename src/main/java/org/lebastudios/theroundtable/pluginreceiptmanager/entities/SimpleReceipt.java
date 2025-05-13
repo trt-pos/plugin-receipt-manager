@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.lebastudios.theroundtable.locale.LangFileLoader;
+import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
 import org.lebastudios.theroundtable.plugincashregister.entities.Receipt;
 
@@ -44,9 +44,9 @@ public class SimpleReceipt
         }
         
         
-        return LangFileLoader.getTranslation("word.receipt") + " " + this.getId() + billNumber
+        return Translator.getInstance().t("word.receipt") + " " + this.getId() + billNumber
                 + " - " + this.getDate().toLocalDate()
-                + " " + LangFileLoader.getTranslation("word.at")
+                + " " + Translator.getInstance().t("word.at")
                 + " " + this.getDate().toLocalTime().truncatedTo(ChronoUnit.SECONDS);
     }
 }

@@ -18,7 +18,7 @@ import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.events.Event1;
 import org.lebastudios.theroundtable.events.IEventMethod1;
-import org.lebastudios.theroundtable.locale.LangFileLoader;
+import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.HoursOfActivityDataAnalyzer;
 import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IDataAnalyzer;
 import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IncomeDataAnalyzer;
@@ -59,9 +59,9 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
         startDate.setValue(LocalDate.now());
         endDate.setValue(LocalDate.now());
 
-        addAnalyzerTab(new HoursOfActivityDataAnalyzer(), LangFileLoader.getTranslation("word.activity"));
-        addAnalyzerTab(new IncomeDataAnalyzer(), LangFileLoader.getTranslation("word.income"));
-        addAnalyzerTab(new ProductsSoldAnalyzer(), LangFileLoader.getTranslation("word.productssold"));
+        addAnalyzerTab(new HoursOfActivityDataAnalyzer(), Translator.getInstance().t("word.activity"));
+        addAnalyzerTab(new IncomeDataAnalyzer(), Translator.getInstance().t("word.income"));
+        addAnalyzerTab(new ProductsSoldAnalyzer(), Translator.getInstance().t("word.productssold"));
 
         receiptList.setOnItemSelected(simpleReceipt ->
         {
