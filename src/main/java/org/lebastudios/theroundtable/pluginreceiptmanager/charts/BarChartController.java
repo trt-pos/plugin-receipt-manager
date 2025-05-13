@@ -2,7 +2,10 @@ package org.lebastudios.theroundtable.pluginreceiptmanager.charts;
 
 import javafx.geometry.Side;
 import javafx.scene.CacheHint;
-import javafx.scene.chart.*;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import org.lebastudios.theroundtable.locale.Translator;
 
 public class BarChartController extends ChartController<XYChart.Series<String, Number>, BarChart<String, Number>>
