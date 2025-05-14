@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import org.lebastudios.theroundtable.ui.IconView?>
+<?import javafx.scene.control.Label?>
+<HBox xmlns="http://javafx.com/javafx" spacing="5"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptLabelController">
+    <IconView fx:id="iconView" iconSize="25" fitHeight="25" fitWidth="25" />
+    <Label fx:id="textLabel" />
+</HBox>

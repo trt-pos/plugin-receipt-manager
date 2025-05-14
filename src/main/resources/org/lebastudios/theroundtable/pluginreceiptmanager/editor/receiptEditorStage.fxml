@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.lebastudios.theroundtable.ui.*?>
-<BorderPane xmlns="http://javafx.com/javafx" fx:id="root"
+<BorderPane xmlns="http://javafx.com/javafx" 
+            fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.editor.ReceiptEditorStageController"
             xmlns:fx="http://javafx.com/fxml" prefWidth="1080" prefHeight="720">
 
     <center>
@@ -39,7 +40,10 @@
                         <LabeledTextField labelText="%word.customer" textFieldPrefSize="150" fx:id="customerNameField"/>
                         <LabeledTextField labelText="-" textFieldPrefSize="150" fx:id="customerIdField"/>
                     </HBox>
-                    <LabeledTextField labelText="%word.employee" textFieldPrefSize="150" fx:id="attendantNameField"/>
+                    <HBox spacing="5">
+                        <Label text="%word.employee" prefWidth="150" />
+                        <ChoiceBox fx:id="accountChoiceBox"/>
+                    </HBox>
                     <LabeledTextField labelText="%word.table" textFieldPrefSize="150" fx:id="tableNameField"/>
 
                     <TextArea fx:id="modificationReasonTextArea" promptText="%phrase.modificationReason" prefRowCount="3" />

@@ -12,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.lebastudios.theroundtable.MainStageController;
@@ -20,6 +21,7 @@ import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.dialogs.ConfirmationTextDialogController;
 import org.lebastudios.theroundtable.dialogs.InformationTextDialogController;
+import org.lebastudios.theroundtable.entities.Account;
 import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
 import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
@@ -49,7 +51,6 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     @FXML public Label receiptDateLabel;
     @FXML public LabeledTextField customerNameField;
     @FXML public LabeledTextField customerIdField;
-    @FXML public LabeledTextField attendantNameField;
     @FXML public LabeledTextField tableNameField;
     @FXML public TableView<ProductTableItem> productsTableView;
     @FXML public Label totalLabel;
@@ -59,6 +60,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     @FXML public HBox centerContent;
     @FXML public VBox taxesDesgloseContainer;
     @FXML public TextArea modificationReasonTextArea;
+    @FXML public ChoiceBox<Account> accountChoiceBox;
 
     @Setter private Consumer<Receipt> onReceiptSaved;
     private final Node lastAppCentralPane;
@@ -74,6 +76,24 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     {
         ProductPaneController.onAction = this::addProduct;
 
+        Database.getInstance().connectQuery(session ->
+        {
+            var accounts = session.createQuery("from Account", Account.class).list();
+            accountChoiceBox.getItems().addAll(accounts);
+        });
+        
+        accountChoiceBox.setConverter(new StringConverter<>()
+        {
+            @Override
+            public String toString(Account object)
+            {
+                return object.getName();
+            }
+
+            @Override
+            public Account fromString(String string) {return null;}
+        });
+        
         centerContent.getChildren().addFirst(new ProductsUIController(false).getRoot());
 
         paymentMethodChoiceBox.getItems().addAll(Transaction.PaymentMethod.values());
@@ -322,7 +342,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
                 customerIdField.setText(r.getClientIdentifier());
             }
 
-            attendantNameField.setText(r.getTransaction().getAccount().getName());
+            accountChoiceBox.getSelectionModel().select(r.getTransaction().getAccount());
             tableNameField.setText(r.getTableName());
 
             r.getProducts().forEach(
@@ -490,7 +510,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         transaction.setAmount(new BigDecimal(totalLabel.getText()));
         transaction.setDate(LocalDateTime.now());
         transaction.setReceipt(receipt);
-        transaction.setAccount(0);
+        transaction.setAccount(accountChoiceBox.getValue());
         transaction.setMethod(paymentMethodChoiceBox.getValue());
         receipt.setTransaction(transaction);
 

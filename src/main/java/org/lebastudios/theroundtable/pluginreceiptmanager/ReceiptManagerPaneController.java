@@ -11,7 +11,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import lombok.Getter;
-import lombok.NonNull;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.lebastudios.theroundtable.controllers.PaneController;
@@ -24,7 +23,6 @@ import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IDataAnalyze
 import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IncomeDataAnalyzer;
 import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.ProductsSoldAnalyzer;
 import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
-import org.lebastudios.theroundtable.ui.IconView;
 import org.lebastudios.theroundtable.ui.LoadingPaneController;
 import org.lebastudios.theroundtable.ui.MultipleItemsListView;
 import org.lebastudios.theroundtable.ui.SearchBox;
@@ -63,6 +61,8 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
         addAnalyzerTab(new IncomeDataAnalyzer(), Translator.getInstance().t("word.income"));
         addAnalyzerTab(new ProductsSoldAnalyzer(), Translator.getInstance().t("word.productssold"));
 
+        receiptList.setReciclablePaneFactory(ReceiptLabelController::new);
+        
         receiptList.setOnItemSelected(simpleReceipt ->
         {
             var receiptViewerController = new ReceiptViewerController(simpleReceipt);
@@ -79,24 +79,6 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
                 var node = receiptViewerController.getRoot();
                 Platform.runLater(() -> rightView.setCenter(node));
             }).start();
-        });
-
-        receiptList.setCellReciclerGenerator(_ -> new MultipleItemsListView.ICellRecicler<>()
-        {
-            @Getter private final IconView graphic = new IconView();
-            @Getter private String text = "";
-
-            {
-                graphic.setFitHeight(25);
-                graphic.setFitWidth(25);
-            }
-
-            @Override
-            public void update(@NonNull SimpleReceipt item)
-            {
-                graphic.setIconName(item.getStatus().getIconName());
-                text = item.toString();
-            }
         });
 
         searchBox.setOnSearch(searchText -> refreshReceiptsListView(
@@ -203,7 +185,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
                 "where r.id = :id or (r.transaction.date >= :startDate " +
                 "and r.transaction.date <= :endDate " +
                 "and (r.clientName like :searchTextPartial " +
-                "or r.employeeName like :searchTextPartial " +
+                "or r.transaction.account.name like :searchTextPartial " +
                 "or r.tableName like :searchTextPartial)) " +
                 "order by r.id desc";
 
