@@ -3,8 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.lebastudios.theroundtable.ui.MultipleItemsListView?>
-<?import org.lebastudios.theroundtable.ui.SearchBox?>
+<?import org.lebastudios.theroundtable.components.PaginableListView?>
+<?import org.lebastudios.theroundtable.components.SearchBox?>
 <SplitPane dividerPositions="0.40"
            fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptManagerPaneController"
            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
@@ -13,7 +13,7 @@
             <Insets bottom="10" left="10" right="10" top="10"/>
         </padding>
         <SearchBox fx:id="searchBox"/>
-        <MultipleItemsListView fx:id="receiptList" VBox.vgrow="ALWAYS"/>
+        <PaginableListView fx:id="receiptList" VBox.vgrow="ALWAYS"/>
     </VBox>
     <BorderPane fx:id="rightView" VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity">
         <padding>

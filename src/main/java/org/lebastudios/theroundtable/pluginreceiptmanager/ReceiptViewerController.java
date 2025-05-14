@@ -25,8 +25,8 @@ import org.lebastudios.theroundtable.plugincashregister.printers.CashRegisterPri
 import org.lebastudios.theroundtable.pluginreceiptmanager.editor.ReceiptEditorStageController;
 import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
 import org.lebastudios.theroundtable.printers.PrinterManager;
-import org.lebastudios.theroundtable.ui.IconTextButton;
-import org.lebastudios.theroundtable.ui.LoadingPaneController;
+import org.lebastudios.theroundtable.components.IconTextButton;
+import org.lebastudios.theroundtable.components.LoadingPaneController;
 
 import java.io.IOException;
 import java.math.BigDecimal;

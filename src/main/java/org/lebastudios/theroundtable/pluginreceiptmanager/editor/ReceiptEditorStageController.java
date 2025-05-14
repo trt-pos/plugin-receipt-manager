@@ -33,8 +33,8 @@ import org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptViewerControlle
 import org.lebastudios.theroundtable.printers.PrintTask;
 import org.lebastudios.theroundtable.printers.PrinterManager;
 import org.lebastudios.theroundtable.printers.Styles;
-import org.lebastudios.theroundtable.ui.BigDecimalField;
-import org.lebastudios.theroundtable.ui.LabeledTextField;
+import org.lebastudios.theroundtable.components.BigDecimalField;
+import org.lebastudios.theroundtable.components.LabeledTextField;
 
 import java.io.IOException;
 import java.math.BigDecimal;

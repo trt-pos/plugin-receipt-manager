@@ -23,9 +23,9 @@ import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IDataAnalyze
 import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.IncomeDataAnalyzer;
 import org.lebastudios.theroundtable.pluginreceiptmanager.analyzers.ProductsSoldAnalyzer;
 import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
-import org.lebastudios.theroundtable.ui.LoadingPaneController;
-import org.lebastudios.theroundtable.ui.MultipleItemsListView;
-import org.lebastudios.theroundtable.ui.SearchBox;
+import org.lebastudios.theroundtable.components.LoadingPaneController;
+import org.lebastudios.theroundtable.components.PaginableListView;
+import org.lebastudios.theroundtable.components.SearchBox;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
 {
     @Getter private static ReceiptManagerPaneController instance;
 
-    @FXML public MultipleItemsListView<SimpleReceipt> receiptList;
+    @FXML public PaginableListView<SimpleReceipt> receiptList;
     @FXML public BorderPane rightView;
     @FXML public DatePicker startDate;
     @FXML public DatePicker endDate;
@@ -179,7 +179,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
     }
 
     private record ListItemsGenerator(String textFilter, LocalDateTime startDate, LocalDateTime endDate)
-            implements MultipleItemsListView.ItemsGenerator<SimpleReceipt>
+            implements PaginableListView.ItemsGenerator<SimpleReceipt>
     {
         private static final String COMMON_QUERY_SQL = "from Receipt r " +
                 "where r.id = :id or (r.transaction.date >= :startDate " +
