@@ -395,7 +395,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
             Receipt receipt = createReceipt();
 
-            boolean result = Database.getInstance().connectTransactionWithBool(session ->
+            boolean result = Database.getInstance().connectTransaction(session ->
             {
                 ReceiptModification receiptModification = new ReceiptModification(
                         modifiedReceipt, receipt, modificationReasonTextArea.getText()
