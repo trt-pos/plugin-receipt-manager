@@ -57,9 +57,9 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
         startDate.setValue(LocalDate.now());
         endDate.setValue(LocalDate.now());
 
-        addAnalyzerTab(new HoursOfActivityDataAnalyzer(), Translator.getInstance().t("word.activity"));
-        addAnalyzerTab(new IncomeDataAnalyzer(), Translator.getInstance().t("word.income"));
-        addAnalyzerTab(new ProductsSoldAnalyzer(), Translator.getInstance().t("word.productssold"));
+        addAnalyzerTab(new HoursOfActivityDataAnalyzer(), Translator.getInstance().t("rm:word.activity"));
+        addAnalyzerTab(new IncomeDataAnalyzer(), Translator.getInstance().t("rm:word.income"));
+        addAnalyzerTab(new ProductsSoldAnalyzer(), Translator.getInstance().t("rm:word.productssold"));
 
         receiptList.setReciclablePaneFactory(ReceiptLabelController::new);
         

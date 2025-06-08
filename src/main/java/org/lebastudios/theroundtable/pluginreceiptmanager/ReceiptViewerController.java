@@ -133,8 +133,8 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
         var taxes = total.subtract(base);
 
         String text = BigDecimalOperations.toString(percentageOver100) + "  %  "
-                + Translator.getInstance().t("word.iva")
-                + "  " + Translator.getInstance().t("word.over") + "  "
+                + Translator.getInstance().t("rm:word.iva")
+                + "  " + Translator.getInstance().t("rm:word.over") + "  "
                 + BigDecimalOperations.toString(base) + " € " + "  "
                 + BigDecimalOperations.toString(taxes) + " € ";
 

@@ -44,9 +44,9 @@ public class SimpleReceipt
         }
         
         
-        return Translator.getInstance().t("word.receipt") + " " + this.getId() + billNumber
+        return Translator.getInstance().t("rm:word.receipt") + " " + this.getId() + billNumber
                 + " - " + this.getDate().toLocalDate()
-                + " " + Translator.getInstance().t("word.at")
+                + " " + Translator.getInstance().t("rm:word.at")
                 + " " + this.getDate().toLocalTime().truncatedTo(ChronoUnit.SECONDS);
     }
 }

@@ -24,11 +24,11 @@
                 <padding>
                     <Insets bottom="10" top="10" />
                 </padding>
-                <Label alignment="CENTER" text="%word.from" minWidth="50"/>
+                <Label alignment="CENTER" text="%rm::word.from" minWidth="50"/>
                 <DatePicker HBox.hgrow="ALWAYS" fx:id="startDate" maxWidth="Infinity"/>
-                <Label alignment="CENTER" text="%word.to" minWidth="30"/>
+                <Label alignment="CENTER" text="%rm::word.to" minWidth="30"/>
                 <DatePicker HBox.hgrow="ALWAYS" fx:id="endDate" maxWidth="Infinity"/>
-                <Button onAction="#search" text="%word.search" minWidth="100"/>
+                <Button onAction="#search" text="%rm::word.search" minWidth="100"/>
             </HBox>
         </top>
         <center>

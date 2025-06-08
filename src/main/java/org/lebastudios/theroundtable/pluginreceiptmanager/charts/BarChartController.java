@@ -14,7 +14,7 @@ public class BarChartController extends ChartController<XYChart.Series<String, N
     protected BarChart<String, Number> charInit()
     {
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel(Translator.getInstance().t("word.hours"));
+        xAxis.setLabel(Translator.getInstance().t("rm:word.hours"));
         xAxis.setSide(Side.BOTTOM);
 
         NumberAxis yAxis = new NumberAxis();

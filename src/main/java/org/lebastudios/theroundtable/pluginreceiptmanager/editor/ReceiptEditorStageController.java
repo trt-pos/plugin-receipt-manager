@@ -389,7 +389,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     {
         if (!validateForm()) return;
 
-        new ConfirmationTextDialogController(Translator.getInstance().t("confirmdialog.editreceipt"), response ->
+        new ConfirmationTextDialogController(Translator.getInstance().t("rm:confirmdialog.editreceipt"), response ->
         {
             if (!response) return;
 
@@ -407,7 +407,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             if (!result)
             {
                 new InformationTextDialogController(
-                        Translator.getInstance().t("infodialog.errorsavingmodifiedreceipt")
+                        Translator.getInstance().t("rm:infodialog.errorsavingmodifiedreceipt")
                 ).instantiate();
 
                 return;
@@ -514,7 +514,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         transaction.setMethod(paymentMethodChoiceBox.getValue());
         receipt.setTransaction(transaction);
 
-        transaction.setDescription(Translator.getInstance().t("phrase.rectbillof") + " " + receiptIDLabel.getText());
+        transaction.setDescription(Translator.getInstance().t("rm:phrase.rectbillof") + " " + receiptIDLabel.getText());
 
         return receipt;
     }
