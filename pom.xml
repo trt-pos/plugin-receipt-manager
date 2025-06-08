@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.lebastudios.theroundtable</groupId>
-    <artifactId>plugin-receipt-manager</artifactId>
+    <groupId>org.lebastudios.theroundtableplugins</groupId>
+    <artifactId>rm</artifactId>
     <version>3.0.0</version>
-    <name>plugin-receipt-manager</name>
+    <name>rm</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -38,8 +38,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.lebastudios.theroundtable</groupId>
-            <artifactId>plugin-cash-register</artifactId>
+            <groupId>org.lebastudios.theroundtableplugins</groupId>
+            <artifactId>cr</artifactId>
             <version>3.0.0</version>
         </dependency>
         <dependency>
@@ -84,7 +84,7 @@
                 <version>3.2.0</version>
                 <configuration>
                     <outputDirectory>${project.basedir}</outputDirectory>
-                    <finalName>${project.artifactId}</finalName>
+                    <finalName>rm</finalName>
                 </configuration>
             </plugin>
         </plugins>
