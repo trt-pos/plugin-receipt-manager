@@ -17,9 +17,9 @@
             <VBox spacing="5" minWidth="450">
 
                 <HBox alignment="CENTER_RIGHT" spacing="5">
-                    <IconTextButton onAction="#save" iconName="save.png" iconSize="24"/>
-                    <IconTextButton onAction="#printPreview" iconName="printer.png" iconSize="24"/>
-                    <IconTextButton onAction="#exit" iconName="exit.png" iconSize="24"/>
+                    <IconTextButton onAction="#save" iconName="rm:save.png" iconSize="24"/>
+                    <IconTextButton onAction="#printPreview" iconName="rm:printer.png" iconSize="24"/>
+                    <IconTextButton onAction="#exit" iconName="rm:exit.png" iconSize="24"/>
                 </HBox>
                 
                 <VBox spacing="10" styleClass="border-round">

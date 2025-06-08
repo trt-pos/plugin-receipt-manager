@@ -9,9 +9,9 @@
       maxWidth="Infinity" spacing="10">
 
     <HBox maxWidth="Infinity" spacing="5" alignment="CENTER_RIGHT">
-        <IconTextButton iconName="edit.png" iconSize="24" onAction="#edit" fx:id="editButton"/>
-        <IconTextButton iconName="printer.png" iconSize="24" onAction="#print"/>
-        <IconTextButton iconName="exit.png" iconSize="24" onAction="#close"/>
+        <IconTextButton iconName="rm:edit.png" iconSize="24" onAction="#edit" fx:id="editButton"/>
+        <IconTextButton iconName="rm:printer.png" iconSize="24" onAction="#print"/>
+        <IconTextButton iconName="rm:exit.png" iconSize="24" onAction="#close"/>
     </HBox>
 
     <VBox spacing="15" styleClass="border-round" >

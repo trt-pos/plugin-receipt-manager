@@ -24,7 +24,7 @@ public class PluginReceiptManager implements IPlugin
     @Override
     public List<Button> getRightButtons()
     {
-        var button = new IconButton("receipt.png");
+        var button = new IconButton("rm:receipt.png");
         button.setOnAction(_ ->
                 MainStageController.getInstance().setCentralNode(new ReceiptManagerPaneController()));
         return List.of(button);
