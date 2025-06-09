@@ -1,10 +1,10 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager.analyzers;
+package org.lebastudios.theroundtableplugins.rm.analyzers;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import org.lebastudios.theroundtable.database.Database;
-import org.lebastudios.theroundtable.plugincashregister.entities.Receipt;
-import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
+import org.lebastudios.theroundtableplugins.cr.entities.Receipt;
+import org.lebastudios.theroundtableplugins.rm.entities.SimpleReceipt;
 
 import java.util.ArrayList;
 import java.util.List;

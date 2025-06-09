@@ -1,12 +1,12 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager.entities;
+package org.lebastudios.theroundtableplugins.rm.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.lebastudios.theroundtable.locale.Translator;
-import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
-import org.lebastudios.theroundtable.plugincashregister.entities.Receipt;
+import org.lebastudios.theroundtableplugins.cr.PluginCashRegisterEvents;
+import org.lebastudios.theroundtableplugins.cr.entities.Receipt;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

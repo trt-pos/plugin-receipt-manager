@@ -1,4 +1,4 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager.charts;
+package org.lebastudios.theroundtableplugins.rm.charts;
 
 import javafx.collections.ObservableList;
 import javafx.scene.CacheHint;

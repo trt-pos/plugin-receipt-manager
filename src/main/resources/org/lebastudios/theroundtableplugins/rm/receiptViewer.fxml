@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.lebastudios.theroundtable.components.IconTextButton?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:id="root"
-      xmlns="http://javafx.com/javafx" fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptViewerController"
+      xmlns="http://javafx.com/javafx" fx:controller="org.lebastudios.theroundtableplugins.rm.ReceiptViewerController"
       maxWidth="Infinity" spacing="10">
 
     <HBox maxWidth="Infinity" spacing="5" alignment="CENTER_RIGHT">

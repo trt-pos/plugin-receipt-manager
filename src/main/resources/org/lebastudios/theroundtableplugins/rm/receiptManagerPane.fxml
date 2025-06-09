@@ -7,7 +7,7 @@
 <?import org.lebastudios.theroundtable.components.SearchBox?>
 <?import org.lebastudios.theroundtable.components.DateRangePicker?>
 <SplitPane dividerPositions="0.40"
-           fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptManagerPaneController"
+           fx:controller="org.lebastudios.theroundtableplugins.rm.ReceiptManagerPaneController"
            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
     <VBox spacing="5">
         <padding>

@@ -1,10 +1,10 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager.analyzers;
+package org.lebastudios.theroundtableplugins.rm.analyzers;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
-import org.lebastudios.theroundtable.pluginreceiptmanager.charts.BarChartController;
-import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
+import org.lebastudios.theroundtableplugins.rm.charts.BarChartController;
+import org.lebastudios.theroundtableplugins.rm.entities.SimpleReceipt;
 
 import java.util.HashMap;
 import java.util.Map;

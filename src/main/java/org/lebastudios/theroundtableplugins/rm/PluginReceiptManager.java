@@ -1,4 +1,4 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager;
+package org.lebastudios.theroundtableplugins.rm;
 
 import javafx.scene.control.Button;
 import org.lebastudios.theroundtable.MainStageController;
@@ -10,8 +10,8 @@ import java.util.List;
 
 @CompileFxml(
         directories = {
-                "org/lebastudios/theroundtable/pluginreceiptmanager",
-                "org/lebastudios/theroundtable/pluginreceiptmanager/editor",
+                "org/lebastudios/theroundtableplugins/rm",
+                "org/lebastudios/theroundtableplugins/rm/editor",
         }
 )
 public class PluginReceiptManager implements IPlugin

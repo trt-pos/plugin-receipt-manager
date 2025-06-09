@@ -1,4 +1,4 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager;
+package org.lebastudios.theroundtableplugins.rm;
 
 import com.github.anastaciocintra.escpos.EscPos;
 import javafx.application.Platform;
@@ -17,13 +17,13 @@ import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
-import org.lebastudios.theroundtable.plugincashregister.PluginCashRegisterEvents;
-import org.lebastudios.theroundtable.plugincashregister.entities.Product;
-import org.lebastudios.theroundtable.plugincashregister.entities.Product_Receipt;
-import org.lebastudios.theroundtable.plugincashregister.entities.Receipt;
-import org.lebastudios.theroundtable.plugincashregister.printers.CashRegisterPrinters;
-import org.lebastudios.theroundtable.pluginreceiptmanager.editor.ReceiptEditorStageController;
-import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
+import org.lebastudios.theroundtableplugins.cr.PluginCashRegisterEvents;
+import org.lebastudios.theroundtableplugins.cr.entities.Product;
+import org.lebastudios.theroundtableplugins.cr.entities.Product_Receipt;
+import org.lebastudios.theroundtableplugins.cr.entities.Receipt;
+import org.lebastudios.theroundtableplugins.cr.printers.CashRegisterPrinters;
+import org.lebastudios.theroundtableplugins.rm.editor.ReceiptEditorStageController;
+import org.lebastudios.theroundtableplugins.rm.entities.SimpleReceipt;
 import org.lebastudios.theroundtable.printers.PrinterManager;
 import org.lebastudios.theroundtable.components.IconTextButton;
 import org.lebastudios.theroundtable.components.LoadingPaneController;

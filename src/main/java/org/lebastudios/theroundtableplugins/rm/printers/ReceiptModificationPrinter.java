@@ -1,7 +1,7 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager.printers;
+package org.lebastudios.theroundtableplugins.rm.printers;
 
 import com.github.anastaciocintra.escpos.EscPos;
-import org.lebastudios.theroundtable.plugincashregister.entities.ReceiptModification;
+import org.lebastudios.theroundtableplugins.cr.entities.ReceiptModification;
 import org.lebastudios.theroundtable.printers.IPrinter;
 
 import java.io.IOException;

@@ -1,8 +1,8 @@
-package org.lebastudios.theroundtable.pluginreceiptmanager;
+package org.lebastudios.theroundtableplugins.rm;
 
 import javafx.scene.control.Label;
 import org.lebastudios.theroundtable.controllers.PaneController;
-import org.lebastudios.theroundtable.pluginreceiptmanager.entities.SimpleReceipt;
+import org.lebastudios.theroundtableplugins.rm.entities.SimpleReceipt;
 import org.lebastudios.theroundtable.components.IconView;
 import org.lebastudios.theroundtable.components.PaginableListView;
 
