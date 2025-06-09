@@ -82,17 +82,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             accountChoiceBox.getItems().addAll(accounts);
         });
         
-        accountChoiceBox.setConverter(new StringConverter<>()
-        {
-            @Override
-            public String toString(Account object)
-            {
-                return object.getName();
-            }
-
-            @Override
-            public Account fromString(String string) {return null;}
-        });
+        accountChoiceBox.setConverter(Account.STRING_CONVERTER);
         
         centerContent.getChildren().addFirst(new ProductsUIController(false).getRoot());
 

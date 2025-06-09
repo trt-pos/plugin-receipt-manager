@@ -17,9 +17,9 @@
             <VBox spacing="5" minWidth="450">
 
                 <HBox alignment="CENTER_RIGHT" spacing="5">
-                    <IconTextButton onAction="#save" iconName="rm:save.png" iconSize="24"/>
-                    <IconTextButton onAction="#printPreview" iconName="rm:printer.png" iconSize="24"/>
-                    <IconTextButton onAction="#exit" iconName="rm:exit.png" iconSize="24"/>
+                    <IconTextButton onAction="#save" iconName="core:save.png" iconSize="24"/>
+                    <IconTextButton onAction="#printPreview" iconName="core:printer.png" iconSize="24"/>
+                    <IconTextButton onAction="#exit" iconName="core:exit.png" iconSize="24"/>
                 </HBox>
                 
                 <VBox spacing="10" styleClass="border-round">
@@ -28,32 +28,32 @@
                     </padding>
                     
                     <HBox spacing="5">
-                        <Label text="%rm::phrase.receiptid"/>
+                        <Label text="%rm:phrase.receiptid"/>
                         <Label fx:id="receiptIDLabel"/>
                         <Label maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                         <Label fx:id="receiptDateLabel"/>
-                        <Label text="%rm::word.at"/>
+                        <Label text="%rm:word.at"/>
                         <Label fx:id="receiptTimeLabel"/>
                     </HBox>
 
                     <HBox spacing="5">
-                        <LabeledTextField labelText="%word.customer" textFieldPrefSize="150" fx:id="customerNameField"/>
+                        <LabeledTextField labelText="%rm:word.customer" textFieldPrefSize="150" fx:id="customerNameField"/>
                         <LabeledTextField labelText="-" textFieldPrefSize="150" fx:id="customerIdField"/>
                     </HBox>
                     <HBox spacing="5">
-                        <Label text="%rm::word.employee" prefWidth="150" />
+                        <Label text="%rm:word.employee" prefWidth="150" />
                         <ChoiceBox fx:id="accountChoiceBox"/>
                     </HBox>
-                    <LabeledTextField labelText="%word.table" textFieldPrefSize="150" fx:id="tableNameField"/>
+                    <LabeledTextField labelText="%rm:word.table" textFieldPrefSize="150" fx:id="tableNameField"/>
 
-                    <TextArea fx:id="modificationReasonTextArea" promptText="%phrase.modificationReason" prefRowCount="3" />
+                    <TextArea fx:id="modificationReasonTextArea" promptText="%rm:phrase.modificationReason" prefRowCount="3" />
                     
                     <TableView fx:id="productsTableView" maxWidth="Infinity" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn text="%rm::word.qty" prefWidth="100"/>
-                            <TableColumn text="%rm::word.product"/>
-                            <TableColumn text="%rm::word.price" prefWidth="100"/>
-                            <TableColumn text="%rm::word.total" prefWidth="100"/>
+                            <TableColumn text="%rm:word.qty" prefWidth="100"/>
+                            <TableColumn text="%rm:word.product"/>
+                            <TableColumn text="%rm:word.price" prefWidth="100"/>
+                            <TableColumn text="%rm:word.total" prefWidth="100"/>
                         </columns>
                     </TableView>
 
@@ -66,11 +66,11 @@
                     <VBox fx:id="taxesDesgloseContainer" spacing="5"/>
 
                     <HBox alignment="CENTER" spacing="5">
-                        <Label text="%rm::word.payed"/>
+                        <Label text="%rm:word.payed"/>
                         <BigDecimalField prefWidth="100" fx:id="paymentAmountField"/>
                         <Label text="€" prefWidth="30"/>
                         <ChoiceBox fx:id="paymentMethodChoiceBox" minHeight="35" maxHeight="35" prefWidth="100" style="-fx-padding: 0;"/>
-                        <Label text="%rm::word.change" alignment="CENTER_RIGHT" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <Label text="%rm:word.change" alignment="CENTER_RIGHT" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                         <Label fx:id="changeLabel"/>
                         <Label text="€" />
                     </HBox>

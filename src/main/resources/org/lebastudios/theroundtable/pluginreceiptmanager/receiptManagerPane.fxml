@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.lebastudios.theroundtable.components.PaginableListView?>
 <?import org.lebastudios.theroundtable.components.SearchBox?>
+<?import org.lebastudios.theroundtable.components.DateRangePicker?>
 <SplitPane dividerPositions="0.40"
            fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptManagerPaneController"
            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
@@ -20,16 +21,11 @@
             <Insets top="10" bottom="10" left="10" right="10"/>
         </padding>
         <top>
-            <HBox alignment="CENTER_RIGHT" spacing="10">
-                <padding>
-                    <Insets bottom="10" top="10" />
-                </padding>
-                <Label alignment="CENTER" text="%rm::word.from" minWidth="50"/>
-                <DatePicker HBox.hgrow="ALWAYS" fx:id="startDate" maxWidth="Infinity"/>
-                <Label alignment="CENTER" text="%rm::word.to" minWidth="30"/>
-                <DatePicker HBox.hgrow="ALWAYS" fx:id="endDate" maxWidth="Infinity"/>
-                <Button onAction="#search" text="%rm::word.search" minWidth="100"/>
-            </HBox>
+            <DateRangePicker fx:id="dateRangePicker" >
+                <BorderPane.margin>
+                    <Insets bottom="10"/>
+                </BorderPane.margin>
+            </DateRangePicker>
         </top>
         <center>
             <TabPane fx:id="statsTabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />

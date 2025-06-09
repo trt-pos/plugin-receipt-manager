@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.lebastudios.theroundtable.components.DateRangePicker;
 import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.events.Event1;
@@ -29,6 +30,7 @@ import org.lebastudios.theroundtable.components.SearchBox;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class ReceiptManagerPaneController extends PaneController<ReceiptManagerPaneController>
@@ -37,8 +39,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
 
     @FXML public PaginableListView<SimpleReceipt> receiptList;
     @FXML public BorderPane rightView;
-    @FXML public DatePicker startDate;
-    @FXML public DatePicker endDate;
+    @FXML public DateRangePicker dateRangePicker;
     @FXML public TabPane statsTabPane;
     @FXML public SearchBox searchBox;
 
@@ -54,9 +55,6 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
     @Override
     protected void initialize()
     {
-        startDate.setValue(LocalDate.now());
-        endDate.setValue(LocalDate.now());
-
         addAnalyzerTab(new HoursOfActivityDataAnalyzer(), Translator.getInstance().t("rm:word.activity"));
         addAnalyzerTab(new IncomeDataAnalyzer(), Translator.getInstance().t("rm:word.income"));
         addAnalyzerTab(new ProductsSoldAnalyzer(), Translator.getInstance().t("rm:word.productssold"));
@@ -81,18 +79,24 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
             }).start();
         });
 
+        dateRangePicker.setOnDateChange((from, to) ->
+        {
+            LocalDate start = from != null ? from : LocalDate.now();
+            LocalDate end = to != null ? to : LocalDate.now();
+
+            refreshReceiptsListView(
+                    searchBox.getText(),
+                    start.atStartOfDay(),
+                    end.atTime(LocalTime.MAX)
+            );
+        });
+        
         searchBox.setOnSearch(searchText -> refreshReceiptsListView(
                 searchText,
-                startDate.getValue().atStartOfDay(),
-                endDate.getValue().atTime(23, 59, 59)
+                dateRangePicker.getStartDate().getValue().atStartOfDay(),
+                dateRangePicker.getEndDate().getValue().atTime(LocalTime.MAX)
         ));
 
-        search(null);
-    }
-
-    @FXML
-    public void search(ActionEvent actionEvent)
-    {
         searchBox.clear();
     }
 

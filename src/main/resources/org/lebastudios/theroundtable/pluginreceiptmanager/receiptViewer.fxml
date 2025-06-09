@@ -5,13 +5,13 @@
 <?import javafx.scene.layout.*?>
 <?import org.lebastudios.theroundtable.components.IconTextButton?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:id="root"
-      xmlns="http://javafx.com/javafx"
+      xmlns="http://javafx.com/javafx" fx:controller="org.lebastudios.theroundtable.pluginreceiptmanager.ReceiptViewerController"
       maxWidth="Infinity" spacing="10">
 
     <HBox maxWidth="Infinity" spacing="5" alignment="CENTER_RIGHT">
-        <IconTextButton iconName="rm:edit.png" iconSize="24" onAction="#edit" fx:id="editButton"/>
-        <IconTextButton iconName="rm:printer.png" iconSize="24" onAction="#print"/>
-        <IconTextButton iconName="rm:exit.png" iconSize="24" onAction="#close"/>
+        <IconTextButton iconName="core:edit.png" iconSize="24" onAction="#edit" fx:id="editButton"/>
+        <IconTextButton iconName="core:printer.png" iconSize="24" onAction="#print"/>
+        <IconTextButton iconName="core:exit.png" iconSize="24" onAction="#close"/>
     </HBox>
 
     <VBox spacing="15" styleClass="border-round" >
@@ -19,37 +19,37 @@
             <Insets left="15" top="15" right="15" bottom="15"/>
         </padding>
         <HBox spacing="5">
-            <Label text="%rm::phrase.receiptid"/>
+            <Label text="%rm:phrase.receiptid"/>
             <Label fx:id="receiptIDLabel"/>
             <Label maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
             <Label fx:id="receiptDateLabel"/>
-            <Label text="%rm::word.at"/>
+            <Label text="%rm:word.at"/>
             <Label fx:id="receiptTimeLabel"/>
         </HBox>
 
         <VBox maxWidth="Infinity" spacing="5">
             <HBox alignment="CENTER_LEFT" spacing="5">
-                <Label text="%rm::word.customer"/>
+                <Label text="%rm:word.customer"/>
                 <Label fx:id="customerNameLabel"/>
             </HBox>
 
             <HBox alignment="CENTER_LEFT" spacing="5">
-                <Label text="%rm::word.employee"/>
+                <Label text="%rm:word.employee"/>
                 <Label fx:id="attendantNameLabel"/>
             </HBox>
 
             <HBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="%rm::word.table"/>
+                <Label text="%rm:word.table"/>
                 <Label fx:id="tableNameLabel"/>
             </HBox>
         </VBox>
 
         <TableView fx:id="productListContainer" maxWidth="Infinity" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn text="%rm::word.qty" prefWidth="100"/>
-                <TableColumn text="%rm::word.product"/>
-                <TableColumn text="%rm::word.price" prefWidth="100"/>
-                <TableColumn text="%rm::word.total" prefWidth="100"/>
+                <TableColumn text="%rm:word.qty" prefWidth="100"/>
+                <TableColumn text="%rm:word.product"/>
+                <TableColumn text="%rm:word.price" prefWidth="100"/>
+                <TableColumn text="%rm:word.total" prefWidth="100"/>
             </columns>
         </TableView>
 
@@ -62,16 +62,16 @@
         <VBox fx:id="taxesDesgloseContainer" spacing="5"/>
 
         <HBox alignment="CENTER" spacing="30">
-            <Label text="%rm::word.method"/>
+            <Label text="%rm:word.method"/>
             <Label fx:id="paymentMethodLabel"/>
         </HBox>
 
         <HBox alignment="CENTER" spacing="30">
 
-            <Label text="%rm::word.payed"/>
+            <Label text="%rm:word.payed"/>
             <Label fx:id="paymentAmountLabel"/>
 
-            <Label text="%rm::word.change"/>
+            <Label text="%rm:word.change"/>
             <Label fx:id="changeLabel"/>
         </HBox>
     </VBox>
