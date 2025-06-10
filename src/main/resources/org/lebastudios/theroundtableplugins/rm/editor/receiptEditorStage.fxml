@@ -36,24 +36,24 @@
                         <Label fx:id="receiptTimeLabel"/>
                     </HBox>
 
-                    <HBox spacing="5">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
                         <LabeledTextField labelText="%rm:word.customer" textFieldPrefSize="150" fx:id="customerNameField"/>
                         <LabeledTextField labelText="-" textFieldPrefSize="150" fx:id="customerIdField"/>
                     </HBox>
-                    <HBox spacing="5">
-                        <Label text="%rm:word.employee" prefWidth="150" />
-                        <ChoiceBox fx:id="accountChoiceBox"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="%rm:word.employee" />
+                        <ChoiceBox fx:id="accountChoiceBox" prefWidth="150" style="-fx-padding: 0;"/>
+                        <LabeledTextField spacing="10" labelText="%rm:word.table" textFieldPrefSize="150" fx:id="tableNameField"/>
                     </HBox>
-                    <LabeledTextField labelText="%rm:word.table" textFieldPrefSize="150" fx:id="tableNameField"/>
 
                     <TextArea fx:id="modificationReasonTextArea" promptText="%rm:phrase.modificationReason" prefRowCount="3" />
                     
                     <TableView fx:id="productsTableView" maxWidth="Infinity" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn text="%rm:word.qty" prefWidth="100"/>
-                            <TableColumn text="%rm:word.product"/>
-                            <TableColumn text="%rm:word.price" prefWidth="100"/>
-                            <TableColumn text="%rm:word.total" prefWidth="100"/>
+                            <TableColumn text="%rm:word.qty" fx:id="qtyColumn" prefWidth="100"/>
+                            <TableColumn text="%rm:word.product" fx:id="productColumn"/>
+                            <TableColumn text="%rm:word.price" fx:id="priceColumn" prefWidth="100"/>
+                            <TableColumn text="%rm:word.total" fx:id="totalColumn" prefWidth="100"/>
                         </columns>
                     </TableView>
 

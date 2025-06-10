@@ -60,6 +60,10 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     @FXML public VBox taxesDesgloseContainer;
     @FXML public TextArea modificationReasonTextArea;
     @FXML public ChoiceBox<Account> accountChoiceBox;
+    @FXML public TableColumn<ProductTableItem, String> qtyColumn;
+    @FXML public TableColumn<ProductTableItem, String> productColumn;
+    @FXML public TableColumn<ProductTableItem, String> priceColumn;
+    @FXML public TableColumn<ProductTableItem, String> totalColumn;
 
     @Setter private Consumer<Receipt> onReceiptSaved;
     private final Node lastAppCentralPane;
@@ -199,14 +203,11 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
         productsTableView.setEditable(true);
         productsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-
-
-        TableColumn<ProductTableItem, String> col1 =
-                ((TableColumn<ProductTableItem, String>) productsTableView.getColumns().getFirst());
-        col1.setCellValueFactory(cellData -> cellData.getValue().qty);
-        col1.setEditable(true);
-        col1.setCellFactory(tc -> new CustomTextFieldTableCell());
-        col1.setOnEditCommit(event ->
+        
+        qtyColumn.setCellValueFactory(cellData -> cellData.getValue().qty);
+        qtyColumn.setEditable(true);
+        qtyColumn.setCellFactory(tc -> new CustomTextFieldTableCell());
+        qtyColumn.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
 
@@ -230,25 +231,21 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             updateCalculatedValues();
         });
 
-        TableColumn<ProductTableItem, String> col2 =
-                ((TableColumn<ProductTableItem, String>) productsTableView.getColumns().get(1));
-        col2.setCellValueFactory(cellData -> cellData.getValue().productName);
-        col2.setEditable(true);
-        col2.setCellFactory(TextFieldTableCell.forTableColumn());
-        col2.setCellFactory(tc -> new CustomTextFieldTableCell());
-        col2.setOnEditCommit(event ->
+        productColumn.setCellValueFactory(cellData -> cellData.getValue().productName);
+        productColumn.setEditable(true);
+        productColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        productColumn.setCellFactory(tc -> new CustomTextFieldTableCell());
+        productColumn.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
             item.productName.setValue(event.getNewValue());
         });
 
-        TableColumn<ProductTableItem, String> col3 =
-                ((TableColumn<ProductTableItem, String>) productsTableView.getColumns().get(2));
-        col3.setCellValueFactory(cellData -> cellData.getValue().price);
-        col3.setEditable(true);
-        col3.setCellFactory(TextFieldTableCell.forTableColumn());
-        col3.setCellFactory(tc -> new CustomTextFieldTableCell());
-        col3.setOnEditCommit(event ->
+        priceColumn.setCellValueFactory(cellData -> cellData.getValue().price);
+        priceColumn.setEditable(true);
+        priceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        priceColumn.setCellFactory(tc -> new CustomTextFieldTableCell());
+        priceColumn.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
 
@@ -265,9 +262,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             updateCalculatedValues();
         });
 
-        TableColumn<ProductTableItem, String> col4 =
-                ((TableColumn<ProductTableItem, String>) productsTableView.getColumns().get(3));
-        col4.setCellValueFactory(cellData -> cellData.getValue().total);
+        totalColumn.setCellValueFactory(cellData -> cellData.getValue().total);
     }
 
     private void updateCalculatedValues()
@@ -509,7 +504,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     }
 
     @AllArgsConstructor
-    private static class ProductTableItem
+    public static class ProductTableItem
     {
         private int id;
         private StringProperty qty;
