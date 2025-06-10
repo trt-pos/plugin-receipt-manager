@@ -14,6 +14,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
+import org.controlsfx.control.tableview2.TableColumn2;
+import org.controlsfx.control.tableview2.TableView2;
+import org.controlsfx.control.tableview2.cell.TextField2TableCell;
 import org.lebastudios.theroundtable.MainStageController;
 import org.lebastudios.theroundtable.apparience.UIEffects;
 import org.lebastudios.theroundtable.controllers.PaneController;
@@ -51,7 +54,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     @FXML public LabeledTextField customerNameField;
     @FXML public LabeledTextField customerIdField;
     @FXML public LabeledTextField tableNameField;
-    @FXML public TableView<ProductTableItem> productsTableView;
+    @FXML public TableView2<ProductTableItem> productsTableView;
     @FXML public Label totalLabel;
     @FXML public BigDecimalField paymentAmountField;
     @FXML public ChoiceBox<Transaction.PaymentMethod> paymentMethodChoiceBox;
@@ -60,10 +63,10 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
     @FXML public VBox taxesDesgloseContainer;
     @FXML public TextArea modificationReasonTextArea;
     @FXML public ChoiceBox<Account> accountChoiceBox;
-    @FXML public TableColumn<ProductTableItem, String> qtyColumn;
-    @FXML public TableColumn<ProductTableItem, String> productColumn;
-    @FXML public TableColumn<ProductTableItem, String> priceColumn;
-    @FXML public TableColumn<ProductTableItem, String> totalColumn;
+    @FXML public TableColumn2<ProductTableItem, String> qtyColumn;
+    @FXML public TableColumn2<ProductTableItem, String> productColumn;
+    @FXML public TableColumn2<ProductTableItem, String> priceColumn;
+    @FXML public TableColumn2<ProductTableItem, String> totalColumn;
 
     @Setter private Consumer<Receipt> onReceiptSaved;
     private final Node lastAppCentralPane;
@@ -108,105 +111,11 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         });
 
         paymentAmountField.getOnValueChangeEvent().addListener(_ -> updateCalculatedValues());
-
-        initializeTableView();
-    }
-
-    private void initializeTableView()
-    {
-        class CustomTextFieldTableCell extends TableCell<ProductTableItem, String>
-        {
-            private final TextField textField;
-
-            public CustomTextFieldTableCell()
-            {
-                textField = new TextField();
-                textField.setStyle("-fx-background-color: white; -fx-border-color: #0d8aff;");
-
-                this.setOnMouseClicked(_ ->
-                {
-                    if (isEmpty() || this.getItem() == null) return;
-                    if (isEditing()) return;
-
-                    startEdit();
-                });
-
-                textField.addEventFilter(KeyEvent.KEY_PRESSED, event ->
-                {
-                    if (event.getCode() == KeyCode.ENTER)
-                    {
-                        commitEdit(textField.getText());
-                        event.consume();
-                        return;
-                    }
-
-                    if (event.getCode() == KeyCode.ESCAPE)
-                    {
-                        cancelEdit();
-                        event.consume();
-                    }
-                });
-
-                textField.focusedProperty().addListener((_, _, newValue) ->
-                {
-                    if (newValue) return;
-
-                    commitEdit(textField.getText());
-                });
-            }
-
-            @Override
-            public void startEdit()
-            {
-                super.startEdit();
-                if (textField != null)
-                {
-                    textField.setText(getItem());
-                    setGraphic(textField);
-                    setText(null);
-                    textField.requestFocus();
-                }
-            }
-
-            @Override
-            public void cancelEdit()
-            {
-                super.cancelEdit();
-                setText(getItem());
-                textField.setText(getItem());
-                setGraphic(null);
-            }
-
-            @Override
-            protected void updateItem(String item, boolean empty)
-            {
-                super.updateItem(item, empty);
-                if (empty || item == null)
-                {
-                    setText(null);
-                    setGraphic(null);
-                    return;
-                }
-
-                if (isEditing())
-                {
-                    setGraphic(textField);
-                    setText(null);
-                }
-                else
-                {
-                    setGraphic(null);
-                    setText(item);
-                }
-            }
-        }
-
-        productsTableView.setEditable(true);
-        productsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         
+        productsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
         qtyColumn.setCellValueFactory(cellData -> cellData.getValue().qty);
-        qtyColumn.setEditable(true);
-        qtyColumn.setCellFactory(tc -> new CustomTextFieldTableCell());
+        qtyColumn.setCellFactory(TextField2TableCell.forTableColumn());
         qtyColumn.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
@@ -232,9 +141,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         });
 
         productColumn.setCellValueFactory(cellData -> cellData.getValue().productName);
-        productColumn.setEditable(true);
-        productColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        productColumn.setCellFactory(tc -> new CustomTextFieldTableCell());
+        productColumn.setCellFactory(TextField2TableCell.forTableColumn());
         productColumn.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();
@@ -242,9 +149,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         });
 
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().price);
-        priceColumn.setEditable(true);
-        priceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        priceColumn.setCellFactory(tc -> new CustomTextFieldTableCell());
+        priceColumn.setCellFactory(TextField2TableCell.forTableColumn());
         priceColumn.setOnEditCommit(event ->
         {
             ProductTableItem item = event.getRowValue();

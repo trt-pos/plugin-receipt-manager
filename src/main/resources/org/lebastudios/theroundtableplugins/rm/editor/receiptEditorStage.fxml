@@ -4,7 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.lebastudios.theroundtable.components.*?>
-<BorderPane xmlns="http://javafx.com/javafx" 
+<?import org.controlsfx.control.tableview2.TableColumn2?>
+<?import org.controlsfx.control.tableview2.TableView2?>
+<BorderPane xmlns="http://javafx.com/javafx"
             fx:controller="org.lebastudios.theroundtableplugins.rm.editor.ReceiptEditorStageController"
             xmlns:fx="http://javafx.com/fxml" prefWidth="1080" prefHeight="720">
 
@@ -48,14 +50,14 @@
 
                     <TextArea fx:id="modificationReasonTextArea" promptText="%rm:phrase.modificationReason" prefRowCount="3" />
                     
-                    <TableView fx:id="productsTableView" maxWidth="Infinity" VBox.vgrow="ALWAYS">
+                    <TableView2 fx:id="productsTableView" maxWidth="Infinity" VBox.vgrow="ALWAYS" editable="true">
                         <columns>
-                            <TableColumn text="%rm:word.qty" fx:id="qtyColumn" prefWidth="100"/>
-                            <TableColumn text="%rm:word.product" fx:id="productColumn"/>
-                            <TableColumn text="%rm:word.price" fx:id="priceColumn" prefWidth="100"/>
-                            <TableColumn text="%rm:word.total" fx:id="totalColumn" prefWidth="100"/>
+                            <TableColumn2 text="%rm:word.qty" fx:id="qtyColumn" prefWidth="100"/>
+                            <TableColumn2 text="%rm:word.product" fx:id="productColumn"/>
+                            <TableColumn2 text="%rm:word.price" fx:id="priceColumn" prefWidth="100"/>
+                            <TableColumn2 text="%rm:word.total" fx:id="totalColumn" prefWidth="100"/>
                         </columns>
-                    </TableView>
+                    </TableView2>
 
                     <HBox alignment="CENTER_RIGHT">
                         <Label text="TOTAL " style="-fx-font-size: 16; -fx-font-weight: bold;"/>
