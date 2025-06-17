@@ -21,6 +21,7 @@ import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.dialogs.ConfirmationTextDialogController;
 import org.lebastudios.theroundtable.dialogs.InformationTextDialogController;
 import org.lebastudios.theroundtable.entities.Account;
+import org.lebastudios.theroundtable.entities.AppInstallation;
 import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
 import org.lebastudios.theroundtableplugins.cr.PluginCashRegisterEvents;
@@ -387,6 +388,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         receipt.setProducts(products);
 
         Transaction transaction = new Transaction();
+        transaction.setAppInstallation(AppInstallation.thisInstalation());
         transaction.setAmount(new BigDecimal(totalLabel.getText()));
         transaction.setDate(LocalDateTime.now());
         transaction.setReceipt(receipt);
