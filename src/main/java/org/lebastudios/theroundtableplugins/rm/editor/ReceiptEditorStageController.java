@@ -40,6 +40,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
@@ -67,23 +68,18 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
 
     @Setter private Consumer<Receipt> onReceiptSaved;
     private final Node lastAppCentralPane;
-    private Receipt modifiedReceipt;
+    private final Receipt originalReceipt;
 
-    public ReceiptEditorStageController()
+    public ReceiptEditorStageController(Receipt receipt)
     {
         lastAppCentralPane = MainStageController.getInstance().getCentralNode();
+        originalReceipt = receipt;
     }
 
     @Override
     protected void initialize()
     {
         ProductPaneController.onAction = this::addProduct;
-
-        Database.getInstance().connectQuery(session ->
-        {
-            var accounts = session.createQuery("from Account", Account.class).list();
-            accountChoiceBox.getItems().addAll(accounts);
-        });
         
         accountChoiceBox.setConverter(Account.STRING_CONVERTER);
         
@@ -165,6 +161,47 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         });
 
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().total);
+
+        Database.getInstance().connectQuery(session ->
+        {
+            List<Account> accounts = session.createQuery("from Account", Account.class).list();
+            Receipt r = session.get(Receipt.class, originalReceipt.getId());
+            Transaction transaction = r.getTransaction();
+            
+            accountChoiceBox.getItems().addAll(accounts);
+            accountChoiceBox.setValue(r.getTransaction().getAccount());
+
+            StringBuffer receiptBillNumber = new StringBuffer();
+            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(r.getId(), receiptBillNumber);
+
+            receiptIDLabel.setText(receiptBillNumber.isEmpty() ? r.getId() + "" : receiptBillNumber.toString());
+            receiptDateLabel.setText(transaction.getDate().toLocalDate().toString());
+            receiptTimeLabel.setText(transaction.getDate().toLocalTime().truncatedTo(ChronoUnit.SECONDS).toString());
+
+            if (r.getClientName() == null)
+            {
+                customerNameField.setText("");
+                customerIdField.setText("");
+            }
+            else
+            {
+                customerNameField.setText(r.getClientName());
+                customerIdField.setText(r.getClientIdentifier());
+            }
+            
+            tableNameField.setText(r.getTableName());
+
+            r.getProducts().forEach(
+                    pr -> productsTableView.getItems().add(new ProductTableItem(pr.getProduct(), pr.getQuantity()))
+            );
+
+            totalLabel.setText(BigDecimalOperations.toString(transaction.getAmount()));
+            paymentAmountField.setValue(r.getPaymentAmount());
+            paymentMethodChoiceBox.setValue(r.getTransaction().getMethod());
+            changeLabel.setText(
+                    BigDecimalOperations.toString(r.getPaymentAmount().subtract(transaction.getAmount()))
+            );
+        });
     }
 
     private void updateCalculatedValues()
@@ -201,49 +238,6 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         });
 
         return taxes;
-    }
-
-    public void showReceipt(Receipt receipt)
-    {
-        Database.getInstance().connectQuery(session ->
-        {
-            Receipt r = session.get(Receipt.class, receipt.getId());
-            Transaction transaction = r.getTransaction();
-
-            StringBuffer receiptBillNumber = new StringBuffer();
-            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(r.getId(), receiptBillNumber);
-
-            receiptIDLabel.setText(receiptBillNumber.isEmpty() ? r.getId() + "" : receiptBillNumber.toString());
-            receiptDateLabel.setText(transaction.getDate().toLocalDate().toString());
-            receiptTimeLabel.setText(transaction.getDate().toLocalTime().truncatedTo(ChronoUnit.SECONDS).toString());
-
-            if (r.getClientName() == null)
-            {
-                customerNameField.setText("");
-                customerIdField.setText("");
-            }
-            else
-            {
-                customerNameField.setText(r.getClientName());
-                customerIdField.setText(r.getClientIdentifier());
-            }
-
-            accountChoiceBox.getSelectionModel().select(r.getTransaction().getAccount());
-            tableNameField.setText(r.getTableName());
-
-            r.getProducts().forEach(
-                    pr -> productsTableView.getItems().add(new ProductTableItem(pr.getProduct(), pr.getQuantity()))
-            );
-
-            totalLabel.setText(BigDecimalOperations.toString(transaction.getAmount()));
-            paymentAmountField.setValue(r.getPaymentAmount());
-            paymentMethodChoiceBox.setValue(r.getTransaction().getMethod());
-            changeLabel.setText(
-                    BigDecimalOperations.toString(r.getPaymentAmount().subtract(transaction.getAmount()))
-            );
-
-            modifiedReceipt = receipt;
-        });
     }
 
     private void addProduct(Product product)
@@ -284,7 +278,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             boolean result = Database.getInstance().connectTransaction(session ->
             {
                 ReceiptModification receiptModification = new ReceiptModification(
-                        modifiedReceipt, receipt, modificationReasonTextArea.getText()
+                        originalReceipt, receipt, modificationReasonTextArea.getText()
                 );
 
                 session.persist(receiptModification);

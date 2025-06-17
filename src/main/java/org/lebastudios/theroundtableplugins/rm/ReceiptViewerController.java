@@ -149,20 +149,10 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
             return session.get(Receipt.class, simpleReceipt.getId());
         });
 
-        var editor = new ReceiptEditorStageController();
+        var editor = new ReceiptEditorStageController(receipt);
         editor.setOnReceiptSaved(_ -> ReceiptManagerPaneController.getInstance().updateReceiptsList());
 
-        MainStageController.getInstance().setCentralNode(new LoadingPaneController().getRoot());
-        
-        new Thread(() ->
-        {
-            Node root = editor.getRoot();
-            Platform.runLater(() ->
-            {
-                MainStageController.getInstance().setCentralNode(root);
-                editor.showReceipt(receipt);
-            });
-        }).start();
+        MainStageController.getInstance().setCentralNode(editor);
     }
 
     @FXML
