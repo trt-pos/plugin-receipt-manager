@@ -44,7 +44,7 @@
                     </HBox>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Label text="%rm:word.employee" />
-                        <ChoiceBox fx:id="accountChoiceBox" prefWidth="150" style="-fx-padding: 0;"/>
+                        <ChoiceBox fx:id="accountChoiceBox" prefWidth="150" />
                         <LabeledTextField spacing="10" labelText="%rm:word.table" textFieldPrefSize="150" fx:id="tableNameField"/>
                     </HBox>
 
@@ -71,7 +71,7 @@
                         <Label text="%rm:word.payed"/>
                         <BigDecimalField prefWidth="100" fx:id="paymentAmountField"/>
                         <Label text="€" prefWidth="30"/>
-                        <ChoiceBox fx:id="paymentMethodChoiceBox" minHeight="35" maxHeight="35" prefWidth="100" style="-fx-padding: 0;"/>
+                        <ChoiceBox fx:id="paymentMethodChoiceBox" minHeight="35" maxHeight="35" prefWidth="100" />
                         <Label text="%rm:word.change" alignment="CENTER_RIGHT" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                         <Label fx:id="changeLabel"/>
                         <Label text="€" />
