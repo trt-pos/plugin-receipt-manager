@@ -15,7 +15,7 @@ import org.lebastudios.theroundtable.components.DateRangePicker;
 import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.events.Event1;
-import org.lebastudios.theroundtable.events.IEventMethod1;
+import org.lebastudios.theroundtable.events.IEventListener1;
 import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtableplugins.rm.analyzers.HoursOfActivityDataAnalyzer;
 import org.lebastudios.theroundtableplugins.rm.analyzers.IDataAnalyzer;
@@ -104,7 +104,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
 
         tab.setOnSelectionChanged(new EventHandler<>()
         {
-            final IEventMethod1<List<SimpleReceipt>> onFoundReceiptListener = foundReceipts ->
+            final IEventListener1<List<SimpleReceipt>> onFoundReceiptListener = foundReceipts ->
             {
                 tab.setContent(new LoadingPaneController().getRoot());
 
