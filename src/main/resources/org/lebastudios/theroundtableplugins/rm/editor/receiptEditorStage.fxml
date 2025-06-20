@@ -50,14 +50,14 @@
 
                     <TextArea fx:id="modificationReasonTextArea" promptText="%rm:phrase.modificationReason" prefRowCount="3" />
                     
-                    <TableView2 fx:id="productsTableView" maxWidth="Infinity" VBox.vgrow="ALWAYS" editable="true">
+                    <EditableTableView fx:id="productsTableView" maxWidth="Infinity" VBox.vgrow="ALWAYS" editable="true">
                         <columns>
                             <TableColumn2 text="%rm:word.qty" fx:id="qtyColumn" prefWidth="100"/>
                             <TableColumn2 text="%rm:word.product" fx:id="productColumn"/>
                             <TableColumn2 text="%rm:word.price" fx:id="priceColumn" prefWidth="100"/>
                             <TableColumn2 text="%rm:word.total" fx:id="totalColumn" prefWidth="100"/>
                         </columns>
-                    </TableView2>
+                    </EditableTableView>
 
                     <HBox alignment="CENTER_RIGHT">
                         <Label text="TOTAL " style="-fx-font-size: 16; -fx-font-weight: bold;"/>
