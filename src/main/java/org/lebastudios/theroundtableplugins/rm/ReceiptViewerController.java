@@ -81,7 +81,9 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
             Receipt receipt = session.get(Receipt.class, this.simpleReceipt.getId());
 
             StringBuffer receiptBillNumber = new StringBuffer();
-            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(simpleReceipt.getId(), receiptBillNumber);
+            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(
+                    new PluginCashRegisterEvents.BillNumberRequestData(simpleReceipt.getId(), receiptBillNumber)
+            );
             
             String receipId = receiptBillNumber.isEmpty() ? receipt.getId() + "" : receiptBillNumber.toString();
             

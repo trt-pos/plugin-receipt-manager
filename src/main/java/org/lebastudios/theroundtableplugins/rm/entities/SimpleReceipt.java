@@ -38,7 +38,9 @@ public class SimpleReceipt
         {
             StringBuffer billNumberSb = new StringBuffer();
 
-            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(this.getId(), billNumberSb);
+            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(
+                    new PluginCashRegisterEvents.BillNumberRequestData(this.getId(), billNumberSb)
+            );
 
             billNumber = billNumberSb.isEmpty() ? "" : (" (" + billNumberSb + ")");
         }

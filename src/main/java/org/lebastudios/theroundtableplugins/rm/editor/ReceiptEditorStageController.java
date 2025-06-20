@@ -173,7 +173,9 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             accountChoiceBox.setValue(r.getTransaction().getAccount());
 
             StringBuffer receiptBillNumber = new StringBuffer();
-            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(r.getId(), receiptBillNumber);
+            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(
+                    new PluginCashRegisterEvents.BillNumberRequestData(r.getId(), receiptBillNumber)
+            );
 
             receiptIDLabel.setText(receiptBillNumber.isEmpty() ? r.getId() + "" : receiptBillNumber.toString());
             receiptDateLabel.setText(transaction.getDate().toLocalDate().toString());
@@ -295,11 +297,15 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
             }
 
             StringBuffer billNumber = new StringBuffer();
-            PluginCashRegisterEvents.onRequestNewRectificationBillNumber.invoke(receipt.getId(), billNumber);
+            PluginCashRegisterEvents.onRequestNewRectificationBillNumber.invoke(
+                    new PluginCashRegisterEvents.BillNumberRequestData(receipt.getId(), billNumber)
+            );
 
             if (!billNumber.isEmpty())
             {
-                PluginCashRegisterEvents.onModifiedReceiptBilled.invoke(receipt, billNumber.toString());
+                PluginCashRegisterEvents.onModifiedReceiptBilled.invoke(
+                        new PluginCashRegisterEvents.ReceiptBilledData(receipt, billNumber.toString())
+                );
             }
 
             onReceiptSaved.accept(receipt);
