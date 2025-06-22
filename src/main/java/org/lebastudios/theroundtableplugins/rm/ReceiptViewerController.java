@@ -10,18 +10,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.Setter;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.lebastudios.theroundtable.MainStageController;
 import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.locale.Translator;
 import org.lebastudios.theroundtable.maths.BigDecimalOperations;
+import org.lebastudios.theroundtable.reports.ReportPaneController;
 import org.lebastudios.theroundtableplugins.cr.PluginCashRegisterEvents;
 import org.lebastudios.theroundtableplugins.cr.entities.Product;
 import org.lebastudios.theroundtableplugins.cr.entities.Product_Receipt;
 import org.lebastudios.theroundtableplugins.cr.entities.Receipt;
 import org.lebastudios.theroundtableplugins.cr.printers.CashRegisterPrinters;
+import org.lebastudios.theroundtableplugins.cr.reports.ReceiptReportGenerator;
 import org.lebastudios.theroundtableplugins.rm.editor.ReceiptEditorStageController;
 import org.lebastudios.theroundtableplugins.rm.entities.SimpleReceipt;
 import org.lebastudios.theroundtable.printers.PrinterManager;
@@ -37,20 +41,9 @@ import java.util.TreeMap;
 public class ReceiptViewerController extends PaneController<ReceiptViewerController>
 {
     private final SimpleReceipt simpleReceipt;
-
-    @FXML public Label receiptIDLabel;
-    @FXML public Label receiptDateLabel;
-    @FXML public Label receiptTimeLabel;
-    @FXML public Label customerNameLabel;
-    @FXML public Label attendantNameLabel;
-    @FXML public Label tableNameLabel;
-    @FXML public TableView<TableProduct> productListContainer;
-    @FXML public Label totalLabel;
-    @FXML public Label paymentAmountLabel;
-    @FXML public Label paymentMethodLabel;
-    @FXML public Label changeLabel;
-    @FXML public VBox taxesDesgloseContainer;
+    
     @FXML public IconTextButton editButton;
+    @FXML public StackPane receiptReportContainer;
 
     @Setter private Runnable onClose = () -> {};
     
@@ -63,84 +56,9 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
     @Override
     protected void initialize()
     {
-        productListContainer.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-
-        ((TableColumn<TableProduct, String>) productListContainer.getColumns().getFirst()).setCellValueFactory(
-                param -> param.getValue().qty());
-        ((TableColumn<TableProduct, String>) productListContainer.getColumns().get(1)).setCellValueFactory(
-                param -> param.getValue().name());
-        ((TableColumn<TableProduct, String>) productListContainer.getColumns().get(2)).setCellValueFactory(
-                param -> param.getValue().price());
-        ((TableColumn<TableProduct, String>) productListContainer.getColumns().getLast()).setCellValueFactory(
-                param -> param.getValue().total());
+        JasperPrint print = new ReceiptReportGenerator().generate(simpleReceipt.getId());
         
-        editButton.setVisible(simpleReceipt.getStatus() == Receipt.Status.DEFAULT);
-        
-        Database.getInstance().connectQuery(session ->
-        {
-            Receipt receipt = session.get(Receipt.class, this.simpleReceipt.getId());
-
-            StringBuffer receiptBillNumber = new StringBuffer();
-            PluginCashRegisterEvents.onRequestReceiptBillNumber.invoke(
-                    new PluginCashRegisterEvents.BillNumberRequestData(simpleReceipt.getId(), receiptBillNumber)
-            );
-            
-            String receipId = receiptBillNumber.isEmpty() ? receipt.getId() + "" : receiptBillNumber.toString();
-            
-            receiptIDLabel.setText(receipId);
-            receiptDateLabel.setText(receipt.getTransaction().getDate().toLocalDate().toString());
-            receiptTimeLabel.setText(
-                    receipt.getTransaction().getDate().toLocalTime().truncatedTo(ChronoUnit.SECONDS).toString());
-
-            tableNameLabel.setText(receipt.getTableName());
-            customerNameLabel.setText(receipt.getClientString());
-            attendantNameLabel.setText(receipt.getTransaction().getAccount().getName());
-
-            List<Product_Receipt> products = session
-                    .createQuery("select products from Receipt r where r.id = :id", Product_Receipt.class)
-                    .setParameter("id", receipt.getId())
-                    .list();
-
-            TreeMap<BigDecimal, BigDecimal> taxes = new TreeMap<>();
-
-            products.forEach(productReceipt ->
-            {
-                var product = productReceipt.getProduct();
-                var qty = productReceipt.getQuantity();
-
-                taxes.put(product.getTaxes(),
-                        taxes.getOrDefault(product.getTaxes(), BigDecimal.ZERO).add(qty.multiply(product.getPrice()))
-                );
-
-                productListContainer.getItems().add(new TableProduct(product, qty));
-            });
-
-            taxes.forEach((key, value) ->
-                    taxesDesgloseContainer.getChildren().add(createTaxesLabel(key, value))
-            );
-            paymentAmountLabel.setText(BigDecimalOperations.toString(receipt.getPaymentAmount()));
-            paymentMethodLabel.setText(receipt.getTransaction().getMethod().translate());
-
-            var receiptTotal = receipt.getTransaction().getAmount();
-            changeLabel.setText(BigDecimalOperations.toString(receipt.getPaymentAmount().subtract(receiptTotal)));
-
-            totalLabel.setText(BigDecimalOperations.toString(receiptTotal));
-        });
-    }
-
-    public static Node createTaxesLabel(BigDecimal taxesPercentage, BigDecimal total)
-    {
-        BigDecimal percentageOver100 = taxesPercentage.multiply(BigDecimal.valueOf(100));
-        var base = BigDecimalOperations.divide(total, taxesPercentage.add(BigDecimal.ONE));
-        var taxes = total.subtract(base);
-
-        String text = BigDecimalOperations.toString(percentageOver100) + "  %  "
-                + Translator.getInstance().t("rm:word.iva")
-                + "  " + Translator.getInstance().t("rm:word.over") + "  "
-                + BigDecimalOperations.toString(base) + " € " + "  "
-                + BigDecimalOperations.toString(taxes) + " € ";
-
-        return new Label(text);
+        receiptReportContainer.getChildren().add(new ReportPaneController(print).getRoot());
     }
 
     @FXML
@@ -180,29 +98,5 @@ public class ReceiptViewerController extends PaneController<ReceiptViewerControl
     {
         ((Pane) root.getParent()).getChildren().remove(root);
         onClose.run();
-    }
-
-    public record TableProduct(SimpleStringProperty qty, SimpleStringProperty name, SimpleStringProperty price,
-                                SimpleStringProperty total)
-    {
-        private TableProduct(Product product, BigDecimal qty)
-        {
-            this(
-                    new SimpleStringProperty(qty.toString()),
-                    new SimpleStringProperty(product.getName()),
-                    new SimpleStringProperty(BigDecimalOperations.toString(product.getPrice())),
-                    new SimpleStringProperty(BigDecimalOperations.toString(product.getPrice().multiply(qty)))
-            );
-        }
-
-        private TableProduct(BigDecimal qty, String name, BigDecimal price)
-        {
-            this(
-                    new SimpleStringProperty(qty.toString()),
-                    new SimpleStringProperty(name),
-                    new SimpleStringProperty(BigDecimalOperations.toString(price)),
-                    new SimpleStringProperty(BigDecimalOperations.toString(price.multiply(qty)))
-            );
-        }
     }
 }

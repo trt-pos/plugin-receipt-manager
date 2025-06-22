@@ -224,7 +224,7 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         taxesDesgloseContainer.getChildren().clear();
 
         calculateTotalPerTax().forEach((key, value) ->
-                taxesDesgloseContainer.getChildren().add(ReceiptViewerController.createTaxesLabel(key, value))
+                taxesDesgloseContainer.getChildren().add(this.createTaxesLabel(key, value))
         );
     }
 
@@ -243,6 +243,21 @@ public class ReceiptEditorStageController extends PaneController<ReceiptEditorSt
         return taxes;
     }
 
+    private Node createTaxesLabel(BigDecimal taxesPercentage, BigDecimal total)
+    {
+        BigDecimal percentageOver100 = taxesPercentage.multiply(BigDecimal.valueOf(100));
+        var base = BigDecimalOperations.divide(total, taxesPercentage.add(BigDecimal.ONE));
+        var taxes = total.subtract(base);
+
+        String text = BigDecimalOperations.toString(percentageOver100) + "  %  "
+                + Translator.getInstance().t("rm:word.iva")
+                + "  " + Translator.getInstance().t("rm:word.over") + "  "
+                + BigDecimalOperations.toString(base) + " € " + "  "
+                + BigDecimalOperations.toString(taxes) + " € ";
+
+        return new Label(text);
+    }
+    
     private void addProduct(Product product)
     {
         productsTableView.getItems().stream()
