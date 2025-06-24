@@ -10,30 +10,30 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>org.lebastudios.theroundtableplugins</groupId>
-        <artifactId>plugins</artifactId>
-        <version>3.0.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>com.github.trt-pos</groupId>
+        <artifactId>the-round-table</artifactId>
+        <version>dev-v3.0.0-SNAPSHOT</version>
     </parent>
     
     <dependencies>
         <dependency>
-            <groupId>org.lebastudios.theroundtable</groupId>
+            <groupId>com.github.trt-pos</groupId>
             <artifactId>core</artifactId>
-            <version>3.0.0</version>
+            <version>dev-v3.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.lebastudios.theroundtableplugins</groupId>
-            <artifactId>cr</artifactId>
-            <version>3.0.0</version>
+            <groupId>com.github.trt-pos</groupId>
+            <artifactId>plugin-cash-register</artifactId>
+            <version>dev-v3.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.lebastudios.theroundtable</groupId>
+                <groupId>com.github.trt-pos</groupId>
                 <artifactId>t-cleaner</artifactId>
             </plugin>
         </plugins>
