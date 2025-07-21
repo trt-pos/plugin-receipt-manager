@@ -1,7 +1,7 @@
 package org.lebastudios.theroundtableplugins.rm;
 
-import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -9,7 +9,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import lombok.Getter;
-import net.sf.jasperreports.engine.JasperPrint;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.lebastudios.theroundtable.components.DateRangePicker;
@@ -17,9 +16,6 @@ import org.lebastudios.theroundtable.controllers.PaneController;
 import org.lebastudios.theroundtable.database.Database;
 import org.lebastudios.theroundtable.events.LocalEvent;
 import org.lebastudios.theroundtable.locale.Translator;
-import org.lebastudios.theroundtable.reports.ReportPaneController;
-import org.lebastudios.theroundtableplugins.cr.entities.Receipt;
-import org.lebastudios.theroundtableplugins.cr.reports.ReceiptReportGenerator;
 import org.lebastudios.theroundtableplugins.rm.analyzers.HoursOfActivityDataAnalyzer;
 import org.lebastudios.theroundtableplugins.rm.analyzers.IDataAnalyzer;
 import org.lebastudios.theroundtableplugins.rm.analyzers.IncomeDataAnalyzer;
@@ -114,7 +110,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
 
                 new Thread(() ->
                 {
-                    var content = analyzer.getDataChart(new ObservableListWrapper<>(foundReceipts));
+                    var content = analyzer.getDataChart(FXCollections.observableArrayList(foundReceipts));
 
                     Platform.runLater(() -> tab.setContent(content));
                 }).start();
@@ -133,7 +129,7 @@ public class ReceiptManagerPaneController extends PaneController<ReceiptManagerP
                         new Thread(() ->
                         {
                             var content =
-                                    analyzer.getDataChart(new ObservableListWrapper<>(contentGenerator.queryAll()));
+                                    analyzer.getDataChart(FXCollections.observableArrayList(contentGenerator.queryAll()));
 
                             Platform.runLater(() -> tab.setContent(content));
                         }).start();
